@@ -635,3 +635,5 @@ flycheck_*.el
 !.gitkeep
 
 # EOFtests/.old/
+tests/.old
+tests/nested/.old
