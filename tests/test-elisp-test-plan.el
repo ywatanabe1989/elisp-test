@@ -1,7 +1,7 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-02-25 07:30:36>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/tests/test-elisp-test-plan.el
+;;; Timestamp: <2025-03-08 14:25:50>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/tests/test-elisp-test-plan.el
 
 (require 'ert)
 (require 'elisp-test-plan)
@@ -12,6 +12,25 @@
    (null
     (et--prepare-test-plan
      '()))))
+
+;; (ert-deftest test-et--prepare-test-plan-buffer-mode
+;;     ()
+;;   (let
+;;       ((mock-tests
+;;         '(("/path/test.el" . "test-function"))))
+;;     (cl-letf
+;;         (((symbol-function '--et-find-deftest)
+;;           (lambda
+;;             (_)
+;;             mock-tests))
+;;          ((symbol-function 'org-mode)
+;;           (lambda
+;;             ()
+;;             (setq major-mode 'org-mode))))
+;;       (unwind-protect
+;;           (should
+;;            (equal (et--prepare-test-plan '("/path/test.el"))
+;;                   mock-tests))))))
 
 (ert-deftest test-et--prepare-test-plan-buffer-mode
     ()
@@ -26,11 +45,14 @@
          ((symbol-function 'org-mode)
           (lambda
             ()
-            (setq major-mode 'org-mode))))
+            (setq major-mode 'org-mode)))
+         ;; Mock org-element-type function that's being used
+         ((symbol-function 'org-element-type)
+          (lambda (element) nil)))
       (unwind-protect
-          (progn
-            (et--prepare-test-plan
-             '("/path/test.el")))))))
+          (should
+           (equal (et--prepare-test-plan '("/path/test.el"))
+                  mock-tests))))))
 
 (ert-deftest test-et--prepare-test-plan-returns-tests
     ()
