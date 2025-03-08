@@ -1,7 +1,7 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-05 07:29:00>
-;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/elisp-test-main.el
+;;; Timestamp: <2025-03-05 20:55:28>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-main.el
 
 ;; Contains the main function to run tests.
 
@@ -15,7 +15,8 @@ When run in a buffer with a file, only run tests from that file."
       (eq major-mode 'dired-mode)
       ;; In dired mode - use the current directory for report
       (setq et-results-org-path-switched
-            (expand-file-name et-results-org-path-dired default-directory))
+            (expand-file-name et-results-org-path-dired
+                              default-directory))
     ;; Otherwise use the default
     (setq et-results-org-path-switched et-results-org-path))
 
@@ -52,7 +53,8 @@ When run in a buffer with a file, only run tests from that file."
              (start-time
               (current-time))
              (test-results
-              (et--run-multiple-tests test-alist timeout-per-test-confirmed)))
+              (et--run-multiple-tests test-alist
+                                      timeout-per-test-confirmed)))
 
           (let
               ((total-time-spent
@@ -103,7 +105,9 @@ When run in a buffer with a file, only run tests from that file."
              timeout-per-test-confirmed
              total-time-spent
              timestamp))))))
-  (kill-buffer "*ert*"))
+
+  (when (get-buffer "*ert*")
+    (kill-buffer "*ert*")))
 
 ;; ;; Key Binding
 ;; (global-set-key (kbd "C-c C-t") #'et-test)
