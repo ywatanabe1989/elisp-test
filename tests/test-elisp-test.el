@@ -40,10 +40,10 @@
   (should
    (require 'elisp-test-report)))
 
-(ert-deftest test-elisp-test-main-loadable
+(ert-deftest test-elisp-test-run-loadable
     ()
   (should
-   (require 'elisp-test-main)))
+   (require 'elisp-test-run)))
 
 (provide 'test-elisp-test)
 

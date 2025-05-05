@@ -6,51 +6,51 @@
 (require 'ert)
 (require 'elisp-test-variables)
 
-(ert-deftest test-et-buffer-name-defined
+(ert-deftest test-elisp-test-buffer-name-defined
     ()
   (should
-   (boundp 'et-buffer-name))
+   (boundp 'elisp-test-buffer-name))
   (should
-   (stringp et-buffer-name))
+   (stringp elisp-test-buffer-name))
   (should
-   (string= et-buffer-name "*elisp-test*")))
+   (string= elisp-test-buffer-name "*elisp-test*")))
 
-(ert-deftest test-et-loadpath-defined
+(ert-deftest test-elisp-test-loadpath-defined
     ()
   (should
-   (boundp 'et-loadpath))
+   (boundp 'elisp-test-loadpath))
   (should
-   (listp et-loadpath)))
+   (listp elisp-test-loadpath)))
 
-(ert-deftest test-et-timeout-sec-defined
+(ert-deftest test-elisp-test-timeout-sec-defined
     ()
   (should
-   (boundp 'et-timeout-sec))
+   (boundp 'elisp-test-timeout-sec))
   (should
-   (integerp et-timeout-sec))
+   (integerp elisp-test-timeout-sec))
   (should
-   (= et-timeout-sec 10)))
+   (= elisp-test-timeout-sec 10)))
 
-(ert-deftest test-et-test-file-expressions-defined
+(ert-deftest test-elisp-test-run-file-expressions-defined
     ()
   (should
-   (boundp 'et-test-file-expressions))
+   (boundp 'elisp-test-run-file-expressions))
   (should
-   (listp et-test-file-expressions))
+   (listp elisp-test-run-file-expressions))
   (should
    (string=
-    (car et-test-file-expressions)
+    (car elisp-test-run-file-expressions)
     "^test-.*\\.el$")))
 
-(ert-deftest test-et-test-file-exclude-expressions-defined
+(ert-deftest test-elisp-test-run-file-exclude-expressions-defined
     ()
   (should
-   (boundp 'et-test-file-exclude-expressions))
+   (boundp 'elisp-test-run-file-exclude-expressions))
   (should
-   (listp et-test-file-exclude-expressions))
+   (listp elisp-test-run-file-exclude-expressions))
   (should
    (=
-    (length et-test-file-exclude-expressions)
+    (length elisp-test-run-file-exclude-expressions)
     4)))
 
 (provide '-test-elisp-test-variables)

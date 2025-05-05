@@ -6,53 +6,53 @@
 (require 'ert)
 (require 'elisp-test-parse)
 
-(ert-deftest test-et--parse-test-result-timeout
+(ert-deftest test-elisp-test--parse-test-result-timeout
     ()
   (should
    (equal
-    (et--parse-test-result "TIMEOUT: Test timed out")
+    (elisp-test--parse-test-result "TIMEOUT: Test timed out")
     '(0 0 0 1))))
 
-(ert-deftest test-et--parse-test-result-error
+(ert-deftest test-elisp-test--parse-test-result-error
     ()
   (should
    (equal
-    (et--parse-test-result "ERROR: Test failed with error")
+    (elisp-test--parse-test-result "ERROR: Test failed with error")
     '(0 1 0 0))))
 
-(ert-deftest test-et--parse-test-result-not-found
+(ert-deftest test-elisp-test--parse-test-result-not-found
     ()
   (should
    (equal
-    (et--parse-test-result "NOT-FOUND: Test not found")
+    (elisp-test--parse-test-result "NOT-FOUND: Test not found")
     '(0 0 1 0))))
 
-(ert-deftest test-et--parse-test-result-passed
+(ert-deftest test-elisp-test--parse-test-result-passed
     ()
   (should
    (equal
-    (et--parse-test-result "Passed: 1")
+    (elisp-test--parse-test-result "Passed: 1")
     '(1 0 0 0))))
 
-(ert-deftest test-et--parse-test-result-failed
+(ert-deftest test-elisp-test--parse-test-result-failed
     ()
   (should
    (equal
-    (et--parse-test-result "Failed: 1")
+    (elisp-test--parse-test-result "Failed: 1")
     '(0 1 0 0))))
 
-(ert-deftest test-et--parse-test-result-skipped
+(ert-deftest test-elisp-test--parse-test-result-skipped
     ()
   (should
    (equal
-    (et--parse-test-result "Skipped: 1")
+    (elisp-test--parse-test-result "Skipped: 1")
     '(0 0 1 0))))
 
-(ert-deftest test-et--parse-test-result-mixed
+(ert-deftest test-elisp-test--parse-test-result-mixed
     ()
   (should
    (equal
-    (et--parse-test-result "Passed: 2\nFailed: 1\nSkipped: 3")
+    (elisp-test--parse-test-result "Passed: 2\nFailed: 1\nSkipped: 3")
     '(2 1 3 0))))
 
 (provide 'elisp-test-parse)

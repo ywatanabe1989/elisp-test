@@ -7,11 +7,11 @@
 (require 'elisp-test-report)
 (require 'elisp-test-variables)
 
-(ert-deftest test-et--report-results-saves-file
+(ert-deftest test-elisp-test--report-results-saves-file
     ()
   (let
-      ((et-results-org-path-switched
-        (make-temp-file "et-test-"))
+      ((elisp-test-results-org-path-switched
+        (make-temp-file "elisp-test-run-"))
        (temp-buffer
         (generate-new-buffer "*test*"))
        (test-results
@@ -19,13 +19,13 @@
           ("2" "test2" "FAILED: reason"))))
     (unwind-protect
         (progn
-          (et--report-results temp-buffer test-results)
+          (elisp-test--report-results temp-buffer test-results)
           (should
-           (file-exists-p et-results-org-path-switched)))
+           (file-exists-p elisp-test-results-org-path-switched)))
       (kill-buffer temp-buffer)
       (when
-          (file-exists-p et-results-org-path-switched)
-        (delete-file et-results-org-path-switched)))))
+          (file-exists-p elisp-test-results-org-path-switched)
+        (delete-file elisp-test-results-org-path-switched)))))
 
 (provide 'test-elisp-test-summarize)
 

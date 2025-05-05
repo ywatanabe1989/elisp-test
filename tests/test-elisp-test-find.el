@@ -5,7 +5,7 @@
 
 (require 'ert)
 
-(ert-deftest test-et-find-test-files-multiple
+(ert-deftest test-elisp-test-find-test-files-multiple
     ()
   "Tests finding test files across multiple root paths."
   (let
@@ -14,7 +14,7 @@
        (expected-files
         '("/tmp/test-dir1/test-sample.el" "/tmp/test-dir2/test-another.el")))
     (cl-letf
-        (((symbol-function '--et-find-test-files-single)
+        (((symbol-function '--elisp-test-find-test-files-single)
           (lambda
             (path &optional _)
             (if
@@ -23,18 +23,18 @@
               '("/tmp/test-dir2/test-another.el")))))
       (should
        (equal
-        (et-find-test-files-multiple test-paths)
+        (elisp-test-find-test-files-multiple test-paths)
         expected-files)))))
 
-(ert-deftest test-et-find-test-files-multiple-with-nil
+(ert-deftest test-elisp-test-find-test-files-multiple-with-nil
     ()
   "Tests that nil root paths returns nil."
   (should
    (eq
-    (et-find-test-files-multiple nil)
+    (elisp-test-find-test-files-multiple nil)
     nil)))
 
-(ert-deftest test-et--find-matching-files-directory
+(ert-deftest test-elisp-test--find-matching-files-directory
     ()
   "Tests finding matching files in a directory."
   (let
@@ -58,10 +58,10 @@
               expected-files))))
       (should
        (equal
-        (--et-find-matching-files root-path patterns)
+        (--elisp-test-find-matching-files root-path patterns)
         expected-files)))))
 
-(ert-deftest test-et--find-matching-files-single-file
+(ert-deftest test-elisp-test--find-matching-files-single-file
     ()
   "Tests finding matching files for a single file path."
   (let
@@ -83,10 +83,10 @@
             (string= pattern "\\.el$"))))
       (should
        (equal
-        (--et-find-matching-files root-path patterns)
+        (--elisp-test-find-matching-files root-path patterns)
         '("/tmp/test-file.el"))))))
 
-(ert-deftest test-et--filter-excluded-files-no-patterns
+(ert-deftest test-elisp-test--filter-excluded-files-no-patterns
     ()
   "Tests filtering excluded files with no exclude patterns."
   (let
@@ -96,10 +96,10 @@
        (exclude-patterns nil))
     (should
      (equal
-      (--et-filter-excluded-files file-list root-path exclude-patterns)
+      (--elisp-test-filter-excluded-files file-list root-path exclude-patterns)
       file-list))))
 
-(ert-deftest test-et--filter-hidden-files
+(ert-deftest test-elisp-test--filter-hidden-files
     ()
   "Tests filtering hidden files."
   (let
@@ -109,10 +109,10 @@
        (include-hidden nil))
     (should
      (equal
-      (--et-filter-hidden-files file-list root-path include-hidden)
+      (--elisp-test-filter-hidden-files file-list root-path include-hidden)
       '("/tmp/test-dir/file1.el")))))
 
-(ert-deftest test-et--filter-hidden-files-include-hidden
+(ert-deftest test-elisp-test--filter-hidden-files-include-hidden
     ()
   "Tests including hidden files when requested."
   (let
@@ -122,27 +122,27 @@
        (include-hidden t))
     (should
      (equal
-      (--et-filter-hidden-files file-list root-path include-hidden)
+      (--elisp-test-filter-hidden-files file-list root-path include-hidden)
       file-list))))
 
-(ert-deftest test-et--find-list-marked-paths-dired
+(ert-deftest test-elisp-test--find-list-marked-paths-dired
     ()
   "Tests getting marked files in dired mode."
   (when
-      (fboundp 'dired-get-marked-files)
+      (fboundp 'dired-elisp-test-marked-files)
     (let
         ((major-mode 'dired-mode))
       (cl-letf
-          (((symbol-function 'dired-get-marked-files)
+          (((symbol-function 'dired-elisp-test-marked-files)
             (lambda
               ()
               '("/tmp/test-dir/file1.el" "/tmp/test-dir/file2.el"))))
         (should
          (equal
-          (--et-find-list-marked-paths-dired)
+          (--elisp-test-find-list-marked-paths-dired)
           '("/tmp/test-dir/file1.el" "/tmp/test-dir/file2.el")))))))
 
-(ert-deftest test-et--find-deftest-file
+(ert-deftest test-elisp-test--find-deftest-file
     ()
   "Tests extracting deftest names from a file."
   (let
@@ -155,7 +155,7 @@
                     "(ert-deftest test-function2 ()\n  (should nil))"))
           (let
               ((result
-                (--et-find-deftest-file temp-file)))
+                (--elisp-test-find-deftest-file temp-file)))
             (should
              (=
               (length result)
@@ -172,17 +172,17 @@
               "test-function1"))))
       (delete-file temp-file))))
 
-(ert-deftest test-et--find-deftest
+(ert-deftest test-elisp-test--find-deftest
     ()
   "Tests finding all deftest forms in files."
   (cl-letf
-      (((symbol-function '--et-find-test-files-single)
+      (((symbol-function '--elisp-test-find-test-files-single)
         (lambda
           (path)
           (if path
               '("/tmp/test-dir/test-file1.el" "/tmp/test-dir/test-file2.el")
             '("/tmp/test-dir/test-file1.el"))))
-       ((symbol-function '--et-find-deftest-file)
+       ((symbol-function '--elisp-test-find-deftest-file)
         (lambda
           (file)
           (if
@@ -193,7 +193,7 @@
              (cons file "test-func1"))))))
     (let
         ((result
-          (--et-find-deftest "/tmp/test-dir")))
+          (--elisp-test-find-deftest "/tmp/test-dir")))
       (should
        (=
         (length result)
@@ -209,22 +209,22 @@
          (nth 1 result))
         "test-func1")))))
 
-(ert-deftest test-et--find-deftest-no-path
+(ert-deftest test-elisp-test--find-deftest-no-path
     ()
   "Tests finding all deftest forms without specifying a path."
   (cl-letf
-      (((symbol-function '--et-find-test-files-single)
+      (((symbol-function '--elisp-test-find-test-files-single)
         (lambda
           (&optional path)
           '("/tmp/test-file1.el")))
-       ((symbol-function '--et-find-deftest-file)
+       ((symbol-function '--elisp-test-find-deftest-file)
         (lambda
           (file)
           (list
            (cons file "test-func1")))))
     (let
         ((result
-          (--et-find-deftest)))
+          (--elisp-test-find-deftest)))
       (should
        (=
         (length result)

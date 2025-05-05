@@ -6,20 +6,20 @@
 (require 'ert)
 (require 'elisp-test-plan)
 
-(ert-deftest test-et--prepare-test-plan-empty-paths
+(ert-deftest test-elisp-test--prepare-test-plan-empty-paths
     ()
   (should
    (null
-    (et--prepare-test-plan
+    (elisp-test--prepare-test-plan
      '()))))
 
-;; (ert-deftest test-et--prepare-test-plan-buffer-mode
+;; (ert-deftest test-elisp-test--prepare-test-plan-buffer-mode
 ;;     ()
 ;;   (let
 ;;       ((mock-tests
 ;;         '(("/path/test.el" . "test-function"))))
 ;;     (cl-letf
-;;         (((symbol-function '--et-find-deftest)
+;;         (((symbol-function '--elisp-test-find-deftest)
 ;;           (lambda
 ;;             (_)
 ;;             mock-tests))
@@ -29,16 +29,16 @@
 ;;             (setq major-mode 'org-mode))))
 ;;       (unwind-protect
 ;;           (should
-;;            (equal (et--prepare-test-plan '("/path/test.el"))
+;;            (equal (elisp-test--prepare-test-plan '("/path/test.el"))
 ;;                   mock-tests))))))
 
-(ert-deftest test-et--prepare-test-plan-buffer-mode
+(ert-deftest test-elisp-test--prepare-test-plan-buffer-mode
     ()
   (let
       ((mock-tests
         '(("/path/test.el" . "test-function"))))
     (cl-letf
-        (((symbol-function '--et-find-deftest)
+        (((symbol-function '--elisp-test-find-deftest)
           (lambda
             (_)
             mock-tests))
@@ -51,22 +51,22 @@
           (lambda (element) nil)))
       (unwind-protect
           (should
-           (equal (et--prepare-test-plan '("/path/test.el"))
+           (equal (elisp-test--prepare-test-plan '("/path/test.el"))
                   mock-tests))))))
 
-(ert-deftest test-et--prepare-test-plan-returns-tests
+(ert-deftest test-elisp-test--prepare-test-plan-returns-tests
     ()
   (let
       ((mock-tests
         '(("/path/test.el" . "test-function"))))
     (cl-letf
-        (((symbol-function '--et-find-deftest)
+        (((symbol-function '--elisp-test-find-deftest)
           (lambda
             (_)
             mock-tests)))
       (should
        (equal
-        (et--prepare-test-plan
+        (elisp-test--prepare-test-plan
          '("/path/test.el"))
         mock-tests)))))
 

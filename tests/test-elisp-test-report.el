@@ -6,19 +6,19 @@
 (require 'ert)
 (require 'elisp-test-report)
 
-(ert-deftest test-et--count-results-empty
+(ert-deftest test-elisp-test--count-results-empty
     ()
   (let
       ((test-names
         (make-hash-table :test 'equal)))
     (should
      (equal
-      (et--count-results
+      (elisp-test--count-results
        '()
        test-names)
       '(0 0 0 0)))))
 
-(ert-deftest test-et--count-results-passed
+(ert-deftest test-elisp-test--count-results-passed
     ()
   (let
       ((test-names
@@ -27,10 +27,10 @@
         '(("file.el" "test1" "PASSED"))))
     (should
      (equal
-      (et--count-results results test-names)
+      (elisp-test--count-results results test-names)
       '(1 0 0 0)))))
 
-(ert-deftest test-et--count-results-failed
+(ert-deftest test-elisp-test--count-results-failed
     ()
   (let
       ((test-names
@@ -39,10 +39,10 @@
         '(("file.el" "test1" "FAILED: reason"))))
     (should
      (equal
-      (et--count-results results test-names)
+      (elisp-test--count-results results test-names)
       '(0 1 0 0)))))
 
-(ert-deftest test-et--count-duplicates-none
+(ert-deftest test-elisp-test--count-duplicates-none
     ()
   (let
       ((test-names
@@ -51,10 +51,10 @@
     (puthash "test2" 1 test-names)
     (should
      (=
-      (et--count-duplicates test-names)
+      (elisp-test--count-duplicates test-names)
       0))))
 
-(ert-deftest test-et--count-duplicates-one
+(ert-deftest test-elisp-test--count-duplicates-one
     ()
   (let
       ((test-names
@@ -62,17 +62,17 @@
     (puthash "test1" 2 test-names)
     (should
      (=
-      (et--count-duplicates test-names)
+      (elisp-test--count-duplicates test-names)
       1))))
 
-(ert-deftest test-et--insert-summary-basic
+(ert-deftest test-elisp-test--insert-summary-basic
     ()
   (let
       ((buf
         (generate-new-buffer "*test*")))
     (unwind-protect
         (progn
-          (et--insert-summary buf
+          (elisp-test--insert-summary buf
                               '(1 0 0 0)
                               0)
           (with-current-buffer buf
@@ -81,7 +81,7 @@
                              (buffer-string)))))
       (kill-buffer buf))))
 
-(ert-deftest test-et--insert-test-section-basic
+(ert-deftest test-elisp-test--insert-test-section-basic
     ()
   (let
       ((buf
@@ -93,7 +93,7 @@
         '(("file.el" "test1" "PASSED"))))
     (unwind-protect
         (progn
-          (et--insert-test-section buf results test-names report-dir
+          (elisp-test--insert-test-section buf results test-names report-dir
                                    (lambda
                                      (str)
                                      (string-match-p "PASSED" str))
@@ -104,7 +104,7 @@
                              (buffer-string)))))
       (kill-buffer buf))))
 
-;; (ert-deftest test-et--insert-test-section-basic
+;; (ert-deftest test-elisp-test--insert-test-section-basic
 ;;     ()
 ;;   (let
 ;;       ((buf
@@ -115,7 +115,7 @@
 ;;         '(("file.el" "test1" "PASSED"))))
 ;;     (unwind-protect
 ;;         (progn
-;;           (et--insert-test-section buf results test-names
+;;           (elisp-test--insert-test-section buf results test-names
 ;;                                    (lambda
 ;;                                      (str)
 ;;                                      (string-match-p "PASSED" str))

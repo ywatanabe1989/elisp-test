@@ -6,29 +6,29 @@
 (require 'ert)
 (require 'elisp-test-loadpath)
 
-(ert-deftest test-et-add-load-paths-adds-to-et-loadpath
+(ert-deftest test-elisp-test-add-load-paths-adds-to-elisp-test-loadpath
     ()
   (unwind-protect
       (let
-          ((original-et-loadpath
-            (copy-sequence et-loadpath))
+          ((original-elisp-test-loadpath
+            (copy-sequence elisp-test-loadpath))
            (test-path "/tmp/test/path"))
-        (et-add-load-paths
+        (elisp-test-add-load-paths
          (list test-path))
         (should
          (member
           (expand-file-name test-path)
-          et-loadpath))
-        (setq et-loadpath original-et-loadpath))))
+          elisp-test-loadpath))
+        (setq elisp-test-loadpath original-elisp-test-loadpath))))
 
-(ert-deftest test-et-add-load-paths-adds-to-load-path
+(ert-deftest test-elisp-test-add-load-paths-adds-to-load-path
     ()
   (unwind-protect
       (let
           ((original-load-path
             (copy-sequence load-path))
            (test-path "/tmp/test/path"))
-        (et-add-load-paths
+        (elisp-test-add-load-paths
          (list test-path))
         (should
          (member
@@ -36,28 +36,28 @@
           load-path))
         (setq load-path original-load-path))))
 
-(ert-deftest test-et-add-load-paths-handles-multiple-paths
+(ert-deftest test-elisp-test-add-load-paths-handles-multiple-paths
     ()
   (unwind-protect
       (let
-          ((original-et-loadpath
-            (copy-sequence et-loadpath))
+          ((original-elisp-test-loadpath
+            (copy-sequence elisp-test-loadpath))
            (original-load-path
             (copy-sequence load-path))
            (test-paths
             '("/tmp/test/path1" "/tmp/test/path2")))
-        (et-add-load-paths test-paths)
+        (elisp-test-add-load-paths test-paths)
         (should
          (member
           (expand-file-name
            (car test-paths))
-          et-loadpath))
+          elisp-test-loadpath))
         (should
          (member
           (expand-file-name
            (car test-paths))
           load-path))
-        (setq et-loadpath original-et-loadpath
+        (setq elisp-test-loadpath original-elisp-test-loadpath
               load-path original-load-path))))
 
 (provide 'test-elisp-test-loadpath)

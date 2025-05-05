@@ -1,33 +1,33 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
 ;;; Timestamp: <2025-03-05 07:33:03>
-;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/tests/test-elisp-test-main.el
+;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/tests/test-elisp-test-run.el
 
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
 ;;; Timestamp: <2025-03-05 07:31:31>
-;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/tests/test-elisp-test-main.el
+;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/tests/test-elisp-test-run.el
 (require 'ert)
-(require 'elisp-test-main)
+(require 'elisp-test-run)
 
-(ert-deftest test-et-test-function
+(ert-deftest test-elisp-test-run-function
     ()
-  "Test the `et-test` function."
-  ;; Since `et-test` is interactive and prompts the user, we'll need to simulate
+  "Test the `elisp-test-run` function."
+  ;; Since `elisp-test-run` is interactive and prompts the user, we'll need to simulate
   ;; user input. We can use `cl-letf` to override `yes-or-no-p`.
   (let
       ((results-org-path-orig
-        et-results-org-path-switched)
+        elisp-test-results-org-path-switched)
        (test-dir
-        (make-temp-file "et-test-dir" t))
+        (make-temp-file "elisp-test-run-dir" t))
        (test-file
-        (make-temp-file "et-test-file" nil ".el"))
+        (make-temp-file "elisp-test-run-file" nil ".el"))
        (test-code "(ert-deftest test-sample-test () (should t))")
        (timeout-per-test 10)
        ;; Save current kill-buffer function to restore later
        (original-kill-buffer
         (symbol-function 'kill-buffer)))
-    (setq et-results-org-path-switched et-results-org-path)
+    (setq elisp-test-results-org-path-switched elisp-test-results-org-path)
     (unwind-protect
         (progn
           ;; Write test code to temp file
@@ -56,44 +56,44 @@
                 (lambda
                   (&rest args)
                   t)))
-            (et-test test-dir timeout-per-test)))
+            (elisp-test-run test-dir timeout-per-test)))
 
       ;; Cleanup
-      (setq et-results-org-path-switched results-org-path-orig)
+      (setq elisp-test-results-org-path-switched results-org-path-orig)
       (delete-directory test-dir t))))
 
-(provide 'test-elisp-test-main)
+(provide 'test-elisp-test-run)
 (when
     (not load-file-name)
-  (message "test-elisp-test-main.el loaded."
+  (message "test-elisp-test-run.el loaded."
            (file-name-nondirectory
             (or load-file-name buffer-file-name))))
 
 ;; ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;; ;;; Author: ywatanabe
 ;; ;;; Timestamp: <2025-03-05 07:31:31>
-;; ;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/tests/test-elisp-test-main.el
+;; ;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/tests/test-elisp-test-run.el
 
 ;; (require 'ert)
-;; (require 'elisp-test-main)
+;; (require 'elisp-test-run)
 
-;; (ert-deftest test-et-test-function
+;; (ert-deftest test-elisp-test-run-function
 ;;     ()
-;;   "Test the `et-test` function."
-;;   ;; Since `et-test` is interactive and prompts the user, we'll need to simulate
+;;   "Test the `elisp-test-run` function."
+;;   ;; Since `elisp-test-run` is interactive and prompts the user, we'll need to simulate
 ;;   ;; user input. We can use `cl-letf` to override `yes-or-no-p`.
 
 ;;   (let
 ;;       ((results-org-path-orig
-;;         et-results-org-path-switched)
+;;         elisp-test-results-org-path-switched)
 ;;        (test-dir
-;;         (make-temp-file "et-test-dir" t))
+;;         (make-temp-file "elisp-test-run-dir" t))
 ;;        (test-file
-;;         (make-temp-file "et-test-file" nil ".el"))
+;;         (make-temp-file "elisp-test-run-file" nil ".el"))
 ;;        (test-code "(ert-deftest test-sample-test () (should t))")
 ;;        (timeout-per-test 10))
 
-;;     (setq et-results-org-path-switched et-results-org-path)
+;;     (setq elisp-test-results-org-path-switched elisp-test-results-org-path)
 
 ;;     (unwind-protect
 ;;         (progn
@@ -112,26 +112,26 @@
 ;;                 (lambda
 ;;                   (&rest args)
 ;;                   t)))
-;;             (et-test
+;;             (elisp-test-run
 ;;              test-dir
 ;;              timeout-per-test)))
 
 ;;       ;; Cleanup
-;;       (setq et-results-org-path-switched results-org-path-orig)
+;;       (setq elisp-test-results-org-path-switched results-org-path-orig)
 ;;       (delete-directory test-dir t))))
 
-;; (provide 'test-elisp-test-main)
+;; (provide 'test-elisp-test-run)
 
 ;; (when
 ;;     (not load-file-name)
-;;   (message "test-elisp-test-main.el loaded."
+;;   (message "test-elisp-test-run.el loaded."
 ;;            (file-name-nondirectory
 ;;             (or load-file-name buffer-file-name))))
 
-(provide 'test-elisp-test-main)
+(provide 'test-elisp-test-run)
 
 (when
     (not load-file-name)
-  (message "test-elisp-test-main.el loaded."
+  (message "test-elisp-test-run.el loaded."
            (file-name-nondirectory
             (or load-file-name buffer-file-name))))

@@ -6,14 +6,14 @@
 (require 'ert)
 (require 'elisp-test-run)
 
-(ert-deftest test-et--run-single-test-not-found
+(ert-deftest test-elisp-test--run-single-test-not-found
     ()
   (let
       ((test-path
         (expand-file-name "nonexistent.el")))
     (let
         ((result
-          (et--run-single-test
+          (elisp-test--run-single-test
            (cons test-path "nonexistent-test"))))
       (should
        (equal
@@ -27,7 +27,7 @@
        (string-match-p "Test not found\\|Cannot open"
                        (nth 2 result))))))
 
-(ert-deftest test-et--run-single-test-error ()
+(ert-deftest test-elisp-test--run-single-test-error ()
   (let ((temp-file (make-temp-file "test" nil ".el")))
     (unwind-protect
         (progn
@@ -36,7 +36,7 @@
              "(require 'ert)\n\n(ert-deftest test-error () (error \"Intentional error\"))"))
           (let
               ((result
-                (et--run-single-test (cons temp-file "test-error"))))
+                (elisp-test--run-single-test (cons temp-file "test-error"))))
             ;; Check that the file path is in the first position
             (should (stringp (car result)))
             ;; Check that the test name is correctly reported
@@ -48,7 +48,7 @@
              (string-match-p "Intentional error" (nth 2 result)))))
       (delete-file temp-file))))
 
-(ert-deftest test-et--run-single-test-success
+(ert-deftest test-elisp-test--run-single-test-success
     ()
   (let
       ((temp-file
@@ -61,11 +61,11 @@
            (string-match-p
             "PASSED"
             (nth 2
-                 (et--run-single-test
+                 (elisp-test--run-single-test
                   (cons temp-file "test-success"))))))
       (delete-file temp-file))))
 
-(ert-deftest test-et--run-single-test-timeout
+(ert-deftest test-elisp-test--run-single-test-timeout
     ()
   (let
       ((temp-file
@@ -78,12 +78,12 @@
            (string-match-p
             "TIMEOUT"
             (nth 2
-                 (et--run-single-test
+                 (elisp-test--run-single-test
                   (cons temp-file "test-timeout")
                   1)))))
       (delete-file temp-file))))
 
-(ert-deftest test-et--run-multiple-tests-basic
+(ert-deftest test-elisp-test--run-multiple-tests-basic
     ()
   (let
       ((temp-file
@@ -96,7 +96,7 @@
           (should
            (= 2
               (length
-               (et--run-multiple-tests
+               (elisp-test--run-multiple-tests
                 (list
                  (cons temp-file "test-multi1")
                  (cons temp-file "test-multi2")))))))

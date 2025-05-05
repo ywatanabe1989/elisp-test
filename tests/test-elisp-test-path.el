@@ -6,52 +6,52 @@
 (require 'ert)
 (require 'elisp-test-loadpath)
 
-(ert-deftest test-et-add-load-paths-single
+(ert-deftest test-elisp-test-add-load-paths-single
     ()
   (let
       ((original-loadpath
-        (copy-sequence et-loadpath))
+        (copy-sequence elisp-test-loadpath))
        (original-load-path
         (copy-sequence load-path))
        (test-path "/tmp/test-path"))
     (unwind-protect
         (progn
-          (et-add-load-paths
+          (elisp-test-add-load-paths
            (list test-path))
           (should
            (member
             (expand-file-name test-path)
-            et-loadpath))
+            elisp-test-loadpath))
           (should
            (member
             (expand-file-name test-path)
             load-path)))
-      (setq et-loadpath original-loadpath
+      (setq elisp-test-loadpath original-loadpath
             load-path original-load-path))))
 
-(ert-deftest test-et-add-load-paths-multiple
+(ert-deftest test-elisp-test-add-load-paths-multiple
     ()
   (let
       ((original-loadpath
-        (copy-sequence et-loadpath))
+        (copy-sequence elisp-test-loadpath))
        (original-load-path
         (copy-sequence load-path))
        (test-paths
         '("/tmp/test-path1" "/tmp/test-path2")))
     (unwind-protect
         (progn
-          (et-add-load-paths test-paths)
+          (elisp-test-add-load-paths test-paths)
           (dolist
               (path test-paths)
             (should
              (member
               (expand-file-name path)
-              et-loadpath))
+              elisp-test-loadpath))
             (should
              (member
               (expand-file-name path)
               load-path))))
-      (setq et-loadpath original-loadpath
+      (setq elisp-test-loadpath original-loadpath
             load-path original-load-path))))
 
 (provide 'test-elisp-test-path)
