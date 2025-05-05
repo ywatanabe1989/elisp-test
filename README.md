@@ -1,5 +1,5 @@
 <!-- ---
-!-- Timestamp: 2025-03-05 09:18:52
+!-- Timestamp: 2025-05-06 01:54:53
 !-- Author: ywatanabe
 !-- File: /home/ywatanabe/.emacs.d/lisp/elisp-test/README.md
 !-- --- -->
@@ -32,24 +32,24 @@ git clone https://github.com/username/elisp-test.git ~/.emacs.d/lisp/elisp-test
 #### Interactive Mode
 1. Run tests on current buffer:
 ```elisp
-(et-test)
+(elisp-test-run)
 ```
 
 2. Run tests on specific path (and child test files):
 ```elisp
-(et-test) ; Run tests on current directory
-(et-test "~/projects/my-elisp-project/test-example.el") ; Run tests on specific path
-(et-test "~/projects/my-elisp-project/tests/") ; Run tests on child paths
+(elisp-test-run) ; Run tests on current directory
+(elisp-test-run "~/projects/my-elisp-project/test-example.el") ; Run tests on specific path
+(elisp-test-run "~/projects/my-elisp-project/tests/") ; Run tests on child paths
 ;; In dired
-;; Mark test files/directories with `m` -> `M-x et-test`
+;; Mark test files/directories with `m` -> `M-x elisp-test-run`
 ```
 
 3. Running on multiple directories:
 ```elisp
 ;; Results are consolidated into a single report
-(et-test '("~/path/to/tests1" "~/path/to/tests2"))
+(elisp-test-run '("~/path/to/tests1" "~/path/to/tests2"))
 
-;; For dired mode: mark multiple directories, then run et-test
+;; For dired mode: mark multiple directories, then run elisp-test-run
 ;; Each directory will generate its own report with consistent timestamps
 ```
 
@@ -59,7 +59,7 @@ Create a `run-tests.el`:
 (setq ert-batch-print-level nil)
 (setq ert-batch-print-length nil)
 (load "~/.emacs.d/lisp/elisp-test/elisp-test.el")
-(et-test "~/path/to/tests")
+(elisp-test-run "~/path/to/tests")
 ```
 
 Run from command line:
@@ -70,16 +70,16 @@ emacs -Q --batch -l run-tests.el
 ## Configurations
 #### Example Key Bindings
 ``` elisp
-(global-set-key (kbd "C-c C-t") #'et-test)
+(global-set-test-key (kbd "C-c C-t") #'elisp-test-run)
 ```
 
 #### Customizable Variables
-- `et-timeout-sec`: Test timeout (default: 10s)
-- `et-test-file-expressions`: Test file patterns
-- `et-test-file-exclude-expressions`: Exclusion patterns
-- `et-results-org-path`: Results file location
-- `et-results-org-path-dired`: Results file location for dired-specific reports
-- `et-buffer-name`: Test buffer name
+- `elisp-test-timeout-sec`: Test timeout (default: 10s)
+- `elisp-test-run-file-expressions`: Test file patterns
+- `elisp-test-run-file-exclude-expressions`: Exclusion patterns
+- `elisp-test-results-org-path`: Results file location
+- `elisp-test-results-org-path-dired`: Results file location for dired-specific reports
+- `elisp-test-buffer-name`: Test buffer name
 
 ## License
 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
