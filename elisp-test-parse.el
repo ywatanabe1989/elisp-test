@@ -1,14 +1,15 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-02-25 06:29:57>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/elisp-test-parse.el
+;;; Timestamp: <2025-05-06 01:49:18>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-parse.el
 
-;; Handles parsing and summarizing test results.
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
 
 ;; Parser
 ;; ----------------------------------------
 
-(defun et--parse-test-result
+(defun elisp-test--parse-test-result
     (result-str)
   "Parse test result string to extract pass/fail counts."
   (let
@@ -41,6 +42,7 @@
               (string-to-number
                (match-string 1 result-str))))))
     (list passed failed skipped timeout)))
+
 
 (provide 'elisp-test-parse)
 

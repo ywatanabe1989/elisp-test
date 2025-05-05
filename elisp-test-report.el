@@ -1,16 +1,20 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-05 08:54:40>
-;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/elisp-test-report.el
+;;; Timestamp: <2025-05-06 01:43:47>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-report.el
 
-(defun et--report-results
-    (buffer test-results &optional timeout-per-test total-time-spent timestamp)
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
+
+(defun elisp-test--report-results
+    (buffer test-results &optional timeout-per-test total-time-spent
+            timestamp)
   "Save results from BUFFER using TEST-RESULTS to file if needed."
   (let*
       ((test-names
         (make-hash-table :test 'equal))
        (report-dir
-        (file-name-directory et-results-org-path-switched))
+        (file-name-directory elisp-test-results-org-path-switched))
        (old-dir
         (expand-file-name ".old" report-dir))
        ;; Use provided timestamp or generate a new one
@@ -18,9 +22,9 @@
         (or timestamp
             (format-time-string "%Y%m%d-%H%M%S")))
        (totals
-        (et--count-results test-results test-names))
+        (elisp-test--count-results test-results test-names))
        (duplicates
-        (et--count-duplicates test-names))
+        (elisp-test--count-duplicates test-names))
        (total-passed
         (nth 0 totals))
        (total-failed
@@ -47,13 +51,14 @@
         (replace-regexp-in-string
          "\\.org$"
          (format "-%s-%s.org" timestamp success-rate-str)
-         et-results-org-path-switched))
+         elisp-test-results-org-path-switched))
        (pdf-file-with-rate
         (replace-regexp-in-string
          "\\.pdf$"
          (format "-%s-%s.pdf" timestamp success-rate-str)
          (concat
-          (file-name-sans-extension et-results-org-path-switched)
+          (file-name-sans-extension
+           elisp-test-results-org-path-switched)
           ".pdf"))))
 
     ;; Create .old directory if it doesn't exist
@@ -64,7 +69,8 @@
     ;; Move old reports to .old directory (only in the report directory)
     (dolist
         (file
-         (directory-files report-dir t "ELISP-TEST-REPORT.*\\.\\(org\\|pdf\\)$"))
+         (directory-files report-dir t
+                          "ELISP-TEST-REPORT.*\\.\\(org\\|pdf\\)$"))
       (when
           (and
            (file-regular-p file)
@@ -86,7 +92,7 @@
     (with-temp-buffer
       (org-mode)
       ;; Insert summary
-      (et--insert-summary
+      (elisp-test--insert-summary
        (current-buffer)
        totals
        duplicates
@@ -96,7 +102,7 @@
       ;; Insert test sections
       ;; --------------------
       ;; Passed
-      (et--insert-test-section
+      (elisp-test--insert-test-section
        (current-buffer)
        test-results test-names report-dir
        (lambda
@@ -104,7 +110,7 @@
          (string-match-p "PASSED" str))
        "Passed Tests")
       ;; Failed
-      (et--insert-test-section
+      (elisp-test--insert-test-section
        (current-buffer)
        test-results test-names report-dir
        (lambda
@@ -112,7 +118,7 @@
          (string-match-p "\\(ERROR\\|FAILED\\)" str))
        "Failed Tests")
       ;; Timeout
-      (et--insert-test-section
+      (elisp-test--insert-test-section
        (current-buffer)
        test-results test-names report-dir
        (lambda
@@ -120,7 +126,7 @@
          (string-match-p "TIMEOUT:" str))
        (format "Timeout Tests (= %s s)" timeout-per-test))
       ;; Not Found
-      (et--insert-test-section
+      (elisp-test--insert-test-section
        (current-buffer)
        test-results test-names report-dir
        (lambda
@@ -142,7 +148,7 @@
            (cl-every #'executable-find latex-deps))
         (let
             ((buf
-              (get-file-buffer org-file-with-rate)))
+              (elisp-test-file-buffer org-file-with-rate)))
           (unless buf
             (setq buf
                   (find-file-noselect org-file-with-rate)))
@@ -160,13 +166,13 @@
                     (file-exists-p tex-file)
                   (delete-file tex-file)))))
           (when
-              (get-buffer "*Org PDF LaTeX Output*")
+              (elisp-test-buffer "*Org PDF LaTeX Output*")
             (kill-buffer "*Org PDF LaTeX Output*")))))))
 
 ;; Helpers
 ;; ----------------------------------------
 
-(defun et--count-results
+(defun elisp-test--count-results
     (results test-names)
   "Count totals from test RESULTS, updating TEST-NAMES hash table."
   (let
@@ -200,7 +206,7 @@
           (cl-incf total-failed)))))
     (list total-passed total-failed total-skipped total-timeout)))
 
-(defun et--count-duplicates
+(defun elisp-test--count-duplicates
     (test-names)
   "Count duplicate test names in TEST-NAMES hash table."
   (let
@@ -214,8 +220,9 @@
      test-names)
     total-duplicates))
 
-(defun et--insert-summary
-    (buffer totals duplicates &optional timeout-per-test total-time-spent)
+(defun elisp-test--insert-summary
+    (buffer totals duplicates &optional timeout-per-test
+            total-time-spent)
   "Insert summary section into BUFFER using TOTALS and DUPLICATES count."
   (with-current-buffer buffer
     (let*
@@ -244,7 +251,8 @@
       (insert "#+DATE: ")
       (insert
        (format-time-string "%Y-%m-%d %H:%M:%S"))
-      (insert " Created by https://github.com/ywatanabe1989/emacs-test\n\n")
+      (insert
+       " Created by https://github.com/ywatanabe1989/emacs-test\n\n")
       (insert "* Test Results Summary\n\n")
       (insert
        (format "- Passed: %d\n" total-passed))
@@ -264,7 +272,7 @@
       (insert
        (format "- Success Rate: %.1f%%\n\n" success-rate)))))
 
-(defun et--insert-test-section
+(defun elisp-test--insert-test-section
     (buffer results test-names report-dir condition section-title)
   "Insert test section into BUFFER for tests matching CONDITION."
   (with-current-buffer buffer
@@ -322,7 +330,8 @@
                            (>
                             (gethash test-name test-names 0)
                             1)
-                           " [DUPLICATE]" "")))
+                           " [DUPLICATE]"
+                         "")))
                    (insert
                     (format "- [[file:%s::%s][%s]]%s\n"
                             rel-path
@@ -338,7 +347,8 @@
                          ((error-content output))
                        ;; Remove just the initial ERROR/FAILED: prefix if present
                        (when
-                           (string-match "^\\(ERROR\\|FAILED\\):\\s-*" error-content)
+                           (string-match "^\\(ERROR\\|FAILED\\):\\s-*"
+                                         error-content)
                          (setq error-content
                                (substring error-content
                                           (match-end 0))))
@@ -349,6 +359,7 @@
                          (insert
                           (format "    %s\n" line)))))))))
            files-hash))))))
+
 
 (provide 'elisp-test-report)
 

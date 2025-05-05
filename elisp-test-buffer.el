@@ -1,9 +1,30 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-03 04:55:53>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/elisp-test-buffer.el
+;;; Timestamp: <2025-05-06 01:55:52>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-buffer.el
 
-(defun et--run-buffer
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
+
+(defun elisp-test-buffer-create (buffer-name)
+  "Create or return a buffer with BUFFER-NAME."
+  (let ((buffer (get-buffer-create buffer-name)))
+    (with-current-buffer buffer
+      (when buffer-read-only
+        (read-only-mode -1))
+      (erase-buffer)
+      (read-only-mode 1)
+      buffer)))
+
+(defun elisp-test-buffer (buffer-name)
+  "Return buffer with BUFFER-NAME if it exists, nil otherwise."
+  (get-buffer buffer-name))
+
+(defun elisp-test-file-buffer (file-path)
+  "Return buffer visiting FILE-PATH, or nil if none."
+  (find-buffer-visiting file-path))
+
+(defun elisp-test--run-buffer
     (&optional file-path buffer-name)
   "Run all tests in FILE-PATH and store results in BUFFER-NAME."
   (interactive)
@@ -15,7 +36,7 @@
        (test-buffer
         (find-file-noselect current-file))
        (buffer
-        (get-buffer-create
+        (elisp-test-buffer-create
          (or buffer-name "*elisp-test-results*"))))
     (with-current-buffer test-buffer
       (eval-buffer)
@@ -31,7 +52,8 @@
              (total-failed 0)
              (total-aborted 0))
           (while
-              (re-search-forward "^(ert-deftest\\s-+\\(\\sw\\(?:\\sw\\|-\\)*\\)" nil t)
+              (re-search-forward
+               "^(ert-deftest\\s-+\\(\\sw\\(?:\\sw\\|-\\)*\\)" nil t)
             (push
              (intern
               (match-string-no-properties 1))
@@ -72,7 +94,8 @@
                             (ert-test-failed-p result)
                           (insert
                            (format "Error: %S\n"
-                                   (ert-test-result-with-condition-condition result))))
+                                   (ert-test-result-with-condition-condition
+                                    result))))
                         (insert "\n"))
                     (error
                      (cl-incf total-aborted)
@@ -81,8 +104,9 @@
                             (cons "ABORTED" err))
                       results)
                      (insert
-                      (format "Test: %s\nStatus: ABORTED\nError: %S\n\n"
-                              test err)))))
+                      (format
+                       "Test: %s\nStatus: ABORTED\nError: %S\n\n"
+                       test err)))))
                 ;; Add summary section with statistics
                 (goto-char
                  (point-min))
@@ -97,7 +121,8 @@
                           (* 100.0
                              (/
                               (float total-passed)
-                              (+ total-passed total-failed total-aborted)))
+                              (+ total-passed total-failed
+                                 total-aborted)))
                         0.0)))
                   (insert "* Test Results Summary\n\n")
                   (insert
@@ -118,7 +143,8 @@
                 (goto-char
                  (point-min))
                 (while
-                    (re-search-forward "Status: \\(PASSED\\|FAILED\\|ABORTED\\)" nil t)
+                    (re-search-forward
+                     "Status: \\(PASSED\\|FAILED\\|ABORTED\\)" nil t)
                   (let
                       ((status
                         (match-string 1)))
@@ -136,6 +162,7 @@
       (pop-to-buffer buffer)
       (pop-to-buffer test-buffer)
       buffer)))
+
 
 (provide 'elisp-test-buffer)
 

@@ -1,7 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-03 10:33:19>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/elisp-test-variables.el
+;;; Timestamp: <2025-05-06 01:43:48>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-variables.el
+
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
 
 ;; This module defines variables used across the framework.
 
@@ -13,28 +16,28 @@
 ;; Variables
 ;; ----------------------------------------
 
-(defvar et-loadpath
+(defvar elisp-test-loadpath
   '()
   "List of load paths for tests.")
 
-(defvar et-buffer-name
+(defvar elisp-test-buffer-name
   "*elisp-test*"
   "Name of the buffer used for elisp test results.")
 
-(defcustom et-timeout-sec
+(defcustom elisp-test-timeout-sec
   10
   "Default timeout in seconds for running a single test."
   :type 'integer
   :group 'elisp-test)
 
-(defcustom et-test-file-expressions
+(defcustom elisp-test-run-file-expressions
   '("^test-.*\\.el$")
   "List of regular expressions to match test files."
   :type
   '(repeat string)
   :group 'elisp-test)
 
-(defcustom et-test-file-exclude-expressions
+(defcustom elisp-test-run-file-exclude-expressions
   '("/\\.[^/]*/"        ; Hidden directories
     "/\\.[^/]*$"        ; Hidden files
     "/_[^/]*/"          ; Underscore directories
@@ -45,25 +48,26 @@
   '(repeat string)
   :group 'elisp-test)
 
-(defcustom et-results-org-path
+(defcustom elisp-test-results-org-path
   "~/ELISP-TEST-REPORT.org"
   "File path where test results will be saved."
   :type 'file
   :group 'elisp-test)
 
-(defcustom et-results-org-path-dired
-  (file-name-nondirectory et-results-org-path)
+(defcustom elisp-test-results-org-path-dired
+  (file-name-nondirectory elisp-test-results-org-path)
   "Filename for test results when running from dired."
   :type 'string
   :group 'elisp-test)
 
-(defvar et-results-org-path-switched
+(defvar elisp-test-results-org-path-switched
   nil
   "Filepath for test results")
 
-(defvar et-plan-buffer-name
+(defvar elisp-test-plan-buffer-name
   "*ELISP-TEST-PLAN*"
   "Buffer name for test planning")
+
 
 (provide 'elisp-test-variables)
 

@@ -1,14 +1,17 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-02-25 14:23:38>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/elisp-test-plan.el
+;;; Timestamp: <2025-05-06 01:54:53>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-plan.el
 
-(defun et--prepare-test-plan
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
+
+(defun elisp-test--prepare-test-plan
     (paths)
   "Create test execution plan from PATHS and return list of tests."
   (let*
       ((tests
-        (mapcan #'--et-find-deftest paths))
+        (mapcan #'--elisp-test-find-deftest paths))
        (test-names
         (mapcar #'cdr tests))
        (duplicate-names
@@ -25,7 +28,7 @@
          (seq-uniq test-names))))
     (when tests
       (with-current-buffer
-          (get-buffer-create et-plan-buffer-name)
+          (elisp-test-buffer-create elisp-test-plan-buffer-name)
         (when buffer-read-only
           (read-only-mode -1))
         (erase-buffer)
@@ -81,10 +84,11 @@
 
       ;; Cleanup
       (when
-          (get-buffer et-plan-buffer-name)
-        (kill-buffer et-plan-buffer-name))
+          (elisp-test-buffer elisp-test-plan-buffer-name)
+        (kill-buffer elisp-test-plan-buffer-name))
 
       tests)))
+
 
 (provide 'elisp-test-plan)
 

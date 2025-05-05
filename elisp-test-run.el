@@ -1,12 +1,15 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-05 07:27:38>
-;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/elisp-test-run.el
+;;; Timestamp: <2025-05-06 01:43:47>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-run.el
+
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
 
 ;; Single Test Runner
 ;; ----------------------------------------
 
-(defun et--run-single-test
+(defun elisp-test--run-single-test
     (test &optional timeout)
   "Run a single TEST with TIMEOUT (defaults to 10 seconds)."
   (let
@@ -17,7 +20,7 @@
        (timeout-secs
         (or timeout 10)))
     (with-current-buffer
-        (get-buffer-create "*ert*")
+        (elisp-test-buffer-create "*ert*")
       (let
           ((inhibit-read-only t))
         (erase-buffer)))
@@ -32,7 +35,9 @@
                 (with-timeout
                     (timeout-secs
                      (list file testname
-                           (format "TIMEOUT: Test exceeded time limit of %s" timeout-secs)))
+                           (format
+                            "TIMEOUT: Test exceeded time limit of %s"
+                            timeout-secs)))
                   (ert test-symbol)
                   (list file testname
                         (with-current-buffer "*ert*"
@@ -44,9 +49,11 @@
                             (cond
                              ((string-match "Failed:\\s-*0\\b" output)
                               "PASSED")
-                             ((string-match "Failed:\\s-*[1-9][0-9]*\\b" output)
+                             ((string-match
+                               "Failed:\\s-*[1-9][0-9]*\\b" output)
                               (concat "FAILED: " output))
-                             ((string-match "Skipped:\\s-*[1-9][0-9]*\\b" output)
+                             ((string-match
+                               "Skipped:\\s-*[1-9][0-9]*\\b" output)
                               (concat "SKIPPED: " output))
                              (t output))))))
               (list file testname "NOT-FOUND: Test not found"))))
@@ -57,17 +64,19 @@
 ;; Multiple Tests Runner
 ;; ----------------------------------------
 
-(defun et--run-multiple-tests
+(defun elisp-test--run-multiple-tests
     (test-alist &optional timeout-per-test)
   "Run multiple tests from TEST-ALIST and return ((path selector results) ...).
 Tests are run sequentially to avoid loading conflicts."
+  (interactive)
   ;; Sequential execution
   (message "Running tests sequentially")
   (mapcar
    (lambda
      (test)
-     (et--run-single-test test timeout-per-test))
+     (elisp-test--run-single-test test timeout-per-test))
    test-alist))
+
 
 (provide 'elisp-test-run)
 

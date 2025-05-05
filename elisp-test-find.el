@@ -1,9 +1,12 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-03 10:54:13>
-;;; File: /home/ywatanabe/.emacs.d/lisp/emacs-test/elisp-test-find.el
+;;; Timestamp: <2025-05-06 01:43:44>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-find.el
 
-(defun et-find-test-files-multiple
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+
+;;;###autoload
+(defun elisp-test-find-test-files-multiple
     (root-paths &optional include-hidden)
   "Find test files in multiple ROOT-PATHS."
   (when root-paths
@@ -17,12 +20,12 @@
           (mapcan
            (lambda
              (path)
-             (--et-find-test-files-single path include-hidden))
+             (--elisp-test-find-test-files-single path include-hidden))
            paths-list)))
       ;; (message "DEBUG: Final result: %S" result)
       result)))
 
-(defun et-find-test-files-multiple-dired
+(defun elisp-test-find-test-files-multiple-dired
     (&optional include-hidden)
   "Find test files based on selected paths"
   (interactive)
@@ -30,18 +33,19 @@
       (eq major-mode 'dired-mode)
     (let*
         ((root-paths
-          (--et-find-list-marked-paths-dired))
+          (--elisp-test-find-list-marked-paths-dired))
          (test-files
           (when root-paths
             (mapcan
              (lambda
                (path)
-               (--et-find-test-files-single path include-hidden))
+               (--elisp-test-find-test-files-single path
+                                                    include-hidden))
              root-paths))))
       ;; nil
       (when test-files
         (with-current-buffer
-            (get-buffer-create et-buffer-name)
+            (elisp-test-buffer-create elisp-test-buffer-name)
           (erase-buffer)
           (insert
            (mapconcat 'identity test-files "\n"))
@@ -54,7 +58,7 @@
 ;; From Single Root
 ;; ----------------------------------------
 
-(defun --et-find-matching-files
+(defun --elisp-test-find-matching-files
     (root-path patterns)
   "Find files in ROOT-PATH matching any of the given PATTERNS."
   ;; (message "DEBUG: Finding matching files in %s with patterns %S" root-path patterns)
@@ -87,34 +91,39 @@
     ;;          (length file-list))
     file-list))
 
-(defun --et-find-test-files-single
+(defun --elisp-test-find-test-files-single
     (root-path &optional include-hidden)
-  "Find all test files in ROOT-PATH matching `et-test-file-expressions`.
+  "Find all test files in ROOT-PATH matching `elisp-test-run-file-expressions`.
 ROOT-PATH is used for calculating relative paths for exclusion patterns."
   (interactive "fSelect file or directory: ")
-  ;; (message "DEBUG: Starting --et-find-test-files-single with root-path: %s" root-path)
+  ;; (message "DEBUG: Starting --elisp-test-find-test-files-single with root-path: %s" root-path)
   (let*
       ((root-path-full-path
         (expand-file-name root-path))
        (file-list
-        (--et-find-matching-files root-path-full-path et-test-file-expressions)))
+        (--elisp-test-find-matching-files root-path-full-path
+                                          elisp-test-run-file-expressions)))
     ;; (message "DEBUG: After matching: Found %d files with list: %S"
     ;;          (length file-list)
     ;;          file-list)
-    ;; (message "DEBUG: et-test-file-exclude-expressions: %S" et-test-file-exclude-expressions)
+    ;; (message "DEBUG: elisp-test-run-file-exclude-expressions: %S" elisp-test-run-file-exclude-expressions)
     (setq file-list
-          (--et-filter-excluded-files file-list root-path-full-path et-test-file-exclude-expressions))
+          (--elisp-test-filter-excluded-files file-list
+                                              root-path-full-path
+                                              elisp-test-run-file-exclude-expressions))
     ;; (message "DEBUG: After exclusion: %d files remaining with list: %S"
     ;;          (length file-list)
     ;;          file-list)
     (setq file-list
-          (--et-filter-hidden-files file-list root-path-full-path include-hidden))
+          (--elisp-test-filter-hidden-files file-list
+                                            root-path-full-path
+                                            include-hidden))
     ;; (message "DEBUG: After hidden filtering: %d files remaining with list: %S"
     ;;          (length file-list)
     ;;          file-list)
     file-list))
 
-(defun --et-filter-excluded-files
+(defun --elisp-test-filter-excluded-files
     (file-list root-path exclude-patterns)
   "Filter FILE-LIST removing files matching EXCLUDE-PATTERNS relative to ROOT-PATH."
   ;; (message "DEBUG: Filtering excluded files, patterns: %S" exclude-patterns)
@@ -153,7 +162,7 @@ ROOT-PATH is used for calculating relative paths for exclusion patterns."
     )
   file-list)
 
-(defun --et-filter-hidden-files
+(defun --elisp-test-filter-hidden-files
     (file-list root-path include-hidden)
   "Filter FILE-LIST to exclude hidden files unless INCLUDE-HIDDEN is non-nil.
 Only considers files with hidden components after ROOT-PATH."
@@ -179,7 +188,8 @@ Only considers files with hidden components after ROOT-PATH."
                  ;; Skip checking if rel-path is just "." (current directory)
                  (if
                      (string= rel-path ".")
-                     t  ;; Always include current directory
+                     t
+                   ;; Always include current directory
                    ;; Otherwise check components
                    (progn
                      (dolist
@@ -206,7 +216,7 @@ Only considers files with hidden components after ROOT-PATH."
 ;; Helper
 ;; ----------------------------------------
 
-(defun --et-find-list-marked-paths-dired
+(defun --elisp-test-find-list-marked-paths-dired
     ()
   "Get list of marked files/directories in dired."
   (interactive)
@@ -214,7 +224,7 @@ Only considers files with hidden components after ROOT-PATH."
       (eq major-mode 'dired-mode)
     (let
         ((found
-          (dired-get-marked-files)))
+          (dired-elisp-test-marked-files)))
       (progn
         ;; (message "Marked Files: %S" found)
         found))))
@@ -222,7 +232,7 @@ Only considers files with hidden components after ROOT-PATH."
 ;; Deftest Finder
 ;; ----------------------------------------
 
-(defun --et-find-deftest-file
+(defun --elisp-test-find-deftest-file
     (file)
   "Extract ert-deftest names from FILE."
   (with-temp-buffer
@@ -232,26 +242,57 @@ Only considers files with hidden components after ROOT-PATH."
     (let
         (tests)
       (while
-          (re-search-forward "^(ert-deftest\\s-+\\([^[:space:]\n]+\\)" nil t)
+          (re-search-forward "^(ert-deftest\\s-+\\([^[:space:]\n]+\\)"
+                             nil t)
         (push
          (cons file
                (match-string 1))
          tests))
       tests)))
 
-(defun --et-find-deftest
+(defun --elisp-test-find-deftest
     (&optional root-path)
   "Find all ert-deftest forms in ROOT-PATH."
   (let*
       ((test-files
-        (--et-find-test-files-single root-path))
+        (--elisp-test-find-test-files-single root-path))
        (tests
         '()))
     (dolist
         (file test-files tests)
       (setq tests
             (append tests
-                    (--et-find-deftest-file file))))))
+                    (--elisp-test-find-deftest-file file))))))
+
+
+;; (defun --elisp-test-find-deftest (&optional paths)
+;;   "Find all ert-deftest forms in provided PATHS.
+;; PATHS can be a single path or a list of paths."
+;;   (let* ((path-list (cond 
+;;                      ((null paths) (list default-directory)) ;; Use current directory if nil
+;;                      ((listp paths) paths)
+;;                      (t (list paths))))
+;;          (tests '()))
+;;     (dolist (path path-list tests)
+;;       (if (file-directory-p path)
+;;           ;; If path is a directory, find test files first
+;;           (let ((test-files (--elisp-test-find-test-files-single path)))
+;;             (dolist (file test-files)
+;;               (setq tests (append tests (--elisp-test-find-deftest-file file)))))
+;;         ;; If path is a file, search directly
+;;         (when (file-exists-p path)
+;;           (setq tests (append tests (--elisp-test-find-deftest-file path))))))))
+
+
+(defun --elisp-test-find-list-marked-paths-dired ()
+  "Get list of marked files/directories in dired."
+  (interactive)
+  (when (eq major-mode 'dired-mode)
+    (let ((found (dired-get-marked-files)))
+      (progn
+        ;; (message "Marked Files: %S" found)
+        found))))
+
 
 (provide 'elisp-test-find)
 

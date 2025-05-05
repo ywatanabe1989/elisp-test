@@ -1,11 +1,12 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-05 20:55:28>
+;;; Timestamp: <2025-05-06 01:50:52>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-main.el
 
-;; Contains the main function to run tests.
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-(defun et-test
+;;;###autoload
+(defun elisp-test-run
     (&optional root-paths timeout-per-test)
   "Run tests from specified ROOT-PATHS, marked files in dired, or current directory.
 When run in a buffer with a file, only run tests from that file."
@@ -14,27 +15,28 @@ When run in a buffer with a file, only run tests from that file."
   (if
       (eq major-mode 'dired-mode)
       ;; In dired mode - use the current directory for report
-      (setq et-results-org-path-switched
-            (expand-file-name et-results-org-path-dired
+      (setq elisp-test-results-org-path-switched
+            (expand-file-name elisp-test-results-org-path-dired
                               default-directory))
     ;; Otherwise use the default
-    (setq et-results-org-path-switched et-results-org-path))
+    (setq elisp-test-results-org-path-switched
+          elisp-test-results-org-path))
 
   ;; Check if called in a buffer with a file
   (if buffer-file-name
-      (et--run-buffer buffer-file-name)
+      (elisp-test--run-buffer buffer-file-name)
     ;; Define test paths and create test-alist (test name and file path)
     (let*
         ((paths-defined-by-a-method
           (cond
            ((eq major-mode 'dired-mode)
-            (--et-find-list-marked-paths-dired))
+            (--elisp-test-find-list-marked-paths-dired))
            (root-paths
-            (et-find-test-files-multiple root-paths))
+            (elisp-test-find-test-files-multiple root-paths))
            (t
             (list default-directory))))
          (test-alist
-          (et--prepare-test-plan paths-defined-by-a-method)))
+          (elisp-test--prepare-test-plan paths-defined-by-a-method)))
 
       ;; Confirmation with displaying detected tests
       (when
@@ -49,12 +51,12 @@ When run in a buffer with a file, only run tests from that file."
               (format-time-string "%Y%m%d-%H%M%S"))
              (timeout-per-test-confirmed
               (or timeout-per-test
-                  (read-number "Timeout [s]: " et-timeout-sec)))
+                  (read-number "Timeout [s]: " elisp-test-timeout-sec)))
              (start-time
               (current-time))
              (test-results
-              (et--run-multiple-tests test-alist
-                                      timeout-per-test-confirmed)))
+              (elisp-test--run-multiple-tests test-alist
+                                              timeout-per-test-confirmed)))
 
           (let
               ((total-time-spent
@@ -79,8 +81,9 @@ When run in a buffer with a file, only run tests from that file."
                   (dir directories)
                 ;; Set the report path to be in this directory
                 (let
-                    ((et-results-org-path-switched
-                      (expand-file-name et-results-org-path-dired dir))
+                    ((elisp-test-results-org-path-switched
+                      (expand-file-name
+                       elisp-test-results-org-path-dired dir))
                      ;; Filter test results to only those in this directory
                      (filtered-results
                       (seq-filter
@@ -91,26 +94,27 @@ When run in a buffer with a file, only run tests from that file."
                        test-results)))
 
                   ;; Generate report for this directory with shared timestamp
-                  (et--report-results
-                   (get-buffer-create "*elisp-test-results*")
+                  (elisp-test--report-results
+                   (elisp-test-buffer-create "*elisp-test-results*")
                    filtered-results
                    timeout-per-test-confirmed
                    total-time-spent
                    timestamp))))
 
             ;; Also generate a full report at the original location
-            (et--report-results
-             (get-buffer-create "*elisp-test-results*")
+            (elisp-test--report-results
+             (elisp-test-buffer-create "*elisp-test-results*")
              test-results
              timeout-per-test-confirmed
              total-time-spent
              timestamp))))))
 
-  (when (get-buffer "*ert*")
+  (when (elisp-test-buffer "*ert*")
     (kill-buffer "*ert*")))
 
 ;; ;; Key Binding
-;; (global-set-key (kbd "C-c C-t") #'et-test)
+;; (global-set-test-key (kbd "C-c C-t") #'elisp-test-run)
+
 
 (provide 'elisp-test-main)
 
