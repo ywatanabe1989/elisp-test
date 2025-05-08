@@ -72,6 +72,8 @@
   "Buffer name for test planning")
 
 
+;; Provide both the new namespace and the original name for compatibility
 (provide 'src/core/variables)
+(provide 'elisp-test-variables)
 
 ;;; elisp-test-core-variables.el ends here

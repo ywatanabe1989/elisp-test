@@ -41,4 +41,3 @@
 (provide 'elisp-test)
 
 ;;; elisp-test.el ends here
-EOF < /dev/null
