@@ -11,7 +11,7 @@
 
 ;;; Code:
 
-(require 'elisp-test-core-variables)
+(require 'src/core/variables)
 
 ;;;###autoload
 (defun elisp-test-add-load-paths
@@ -27,6 +27,6 @@
       (add-to-list 'load-path full-path))))
 
 
-(provide 'elisp-test-core-loadpath)
+(provide 'src/core/loadpath)
 
 ;;; elisp-test-core-loadpath.el ends here

@@ -65,6 +65,6 @@ Result can be either a string or a list with the result in the 3rd position."
               (substring result-str (+ error-start 1))
             result-str))))))
 
-(provide 'elisp-test-util-parse)
+(provide 'src/util/parse)
 
 ;;; elisp-test-util-parse.el ends here

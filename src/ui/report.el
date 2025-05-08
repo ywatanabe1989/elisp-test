@@ -256,6 +256,6 @@
                          (insert (format "    %s\n" line)))))))))
            files-hash))))))
 
-(provide 'elisp-test-ui-report)
+(provide 'src/ui/report)
 
 ;;; elisp-test-ui-report.el ends here

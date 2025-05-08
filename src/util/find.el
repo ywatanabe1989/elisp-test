@@ -229,6 +229,6 @@ PATHS can be a single path or a list of paths."
         (when (file-exists-p path)
           (setq tests (append tests (--elisp-test-find-deftest-file path))))))))
 
-(provide 'elisp-test-util-find)
+(provide 'src/util/find)
 
 ;;; elisp-test-util-find.el ends here

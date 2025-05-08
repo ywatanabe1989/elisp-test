@@ -72,6 +72,6 @@
   "Buffer name for test planning")
 
 
-(provide 'elisp-test-core-variables)
+(provide 'src/core/variables)
 
 ;;; elisp-test-core-variables.el ends here
