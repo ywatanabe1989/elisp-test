@@ -12,6 +12,31 @@ A testing framework for Emacs Lisp projects that integrates with ERT (Emacs Lisp
 
 ![Demo GIF](./docs/emacs-gif-screenshot-2025-03-05-09:13:39.gif)
 
+## Project Structure
+
+The project has been refactored with a modern Emacs package structure:
+
+```
+elisp-test/
+├── elisp-test.el           # Main entry point
+├── src/
+│   ├── core/               # Core functionality
+│   │   ├── variables.el    # Framework-wide variables
+│   │   ├── loadpath.el     # Load path management
+│   │   ├── run.el          # Test execution
+│   │   └── main.el         # Main user-facing functions
+│   ├── util/               # Utility functions
+│   │   ├── find.el         # File finding utilities
+│   │   ├── parse.el        # Test result parsing
+│   │   └── plan.el         # Test planning
+│   └── ui/                 # UI components
+│       ├── buffer.el       # Buffer manipulation
+│       └── report.el       # Report generation
+└── tests/                  # Test files
+```
+
+A compatibility layer (`src/compat.el`) ensures backward compatibility with the old file structure for existing code.
+
 ## Example Test Reports
 - [`./tests/ELISP-TEST-REPORT-20250509-015650-98-PERCENT.org`](./tests/ELISP-TEST-REPORT-20250509-015650-98-PERCENT.org)
 - [`./tests/nested/ELISP-TEST-REPORT-20250509-015650-100-PERCENT.org`](./tests/nested/ELISP-TEST-REPORT-20250509-015650-100-PERCENT.org)
@@ -24,7 +49,20 @@ git clone https://github.com/username/elisp-test.git ~/.emacs.d/lisp/elisp-test
 
 2. Add to your init.el:
 ```elisp
+;; Add main directory and src subdirectories to load path
 (add-to-list 'load-path "~/.emacs.d/lisp/elisp-test")
+(add-to-list 'load-path "~/.emacs.d/lisp/elisp-test/src/core")
+(add-to-list 'load-path "~/.emacs.d/lisp/elisp-test/src/util")
+(add-to-list 'load-path "~/.emacs.d/lisp/elisp-test/src/ui")
+
+;; Or use a helper function to recursively add directories
+(let ((base-dir "~/.emacs.d/lisp/elisp-test"))
+  (add-to-list 'load-path base-dir)
+  (dolist (dir (directory-files (expand-file-name "src" base-dir) t directory-files-no-dots-regexp))
+    (when (file-directory-p dir)
+      (add-to-list 'load-path dir))))
+
+;; Load the package
 (require 'elisp-test)
 ```
 
@@ -58,7 +96,18 @@ Create a `run-tests.el`:
 ```elisp
 (setq ert-batch-print-level nil)
 (setq ert-batch-print-length nil)
-(load "~/.emacs.d/lisp/elisp-test/elisp-test.el")
+
+;; Add all required directories to load-path
+(let ((base-dir "~/.emacs.d/lisp/elisp-test"))
+  (add-to-list 'load-path base-dir)
+  (add-to-list 'load-path (expand-file-name "src" base-dir))
+  (dolist (dir '("core" "util" "ui"))
+    (add-to-list 'load-path (expand-file-name (concat "src/" dir) base-dir))))
+
+;; Use compatibility layer for simplified loading
+(load "~/.emacs.d/lisp/elisp-test/src/compat.el")
+
+;; Run the tests
 (elisp-test-run "~/path/to/tests" nil t) ; Third parameter t means skip confirmation
 ```
 

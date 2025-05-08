@@ -1,13 +1,18 @@
-;;; -*- coding: utf-8; lexical-binding: t -*-
-;;; Author: ywatanabe
-;;; Timestamp: <2025-05-06 01:43:47>
-;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-run.el
+;;; elisp-test-core-run.el --- Test runner for elisp-test -*- lexical-binding: t -*-
 
-;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+;; Author: ywatanabe
+;; Timestamp: <2025-05-09 02:14:00>
 
+;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-;; Single Test Runner
-;; ----------------------------------------
+;;; Commentary:
+
+;; Provides functions for running tests in the elisp-test framework.
+
+;;; Code:
+
+(require 'elisp-test-core-variables)
+(require 'elisp-test-ui-buffer)
 
 (defun elisp-test--run-single-test
     (test &optional timeout)
@@ -84,10 +89,6 @@ Tests are run sequentially to avoid loading conflicts."
    test-alist))
 
 
-(provide 'elisp-test-run)
+(provide 'elisp-test-core-run)
 
-(when
-    (not load-file-name)
-  (message "elisp-test-run.el loaded."
-           (file-name-nondirectory
-            (or load-file-name buffer-file-name))))
+;;; elisp-test-core-run.el ends here

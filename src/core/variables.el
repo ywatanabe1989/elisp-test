@@ -1,12 +1,15 @@
-;;; -*- coding: utf-8; lexical-binding: t -*-
-;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 01:11:00>
-;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test-variables.el
+;;; elisp-test-core-variables.el --- Core variables for elisp-test -*- lexical-binding: t -*-
 
-;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
+;; Author: ywatanabe
+;; Timestamp: <2025-05-09 02:10:00>
 
+;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-;; This module defines variables used across the framework.
+;;; Commentary:
+
+;; This module defines variables used across the elisp-test framework.
+
+;;; Code:
 
 (defgroup elisp-test
   nil
@@ -69,10 +72,6 @@
   "Buffer name for test planning")
 
 
-(provide 'elisp-test-variables)
+(provide 'elisp-test-core-variables)
 
-(when
-    (not load-file-name)
-  (message "elisp-test-variables.el loaded."
-           (file-name-nondirectory
-            (or load-file-name buffer-file-name))))
+;;; elisp-test-core-variables.el ends here

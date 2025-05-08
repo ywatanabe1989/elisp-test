@@ -10,8 +10,12 @@ touch "$LOG_PATH"
 PATHS=(
     "$THIS_DIR"
     "$THIS_DIR/tests/"
+    "$THIS_DIR/src/"
+    "$THIS_DIR/src/core/"
+    "$THIS_DIR/src/util/"
+    "$THIS_DIR/src/ui/"
 )
-SOURCE_FILES=("$THIS_DIR"/*.el)
+SOURCE_FILES=("$THIS_DIR"/*.el "$THIS_DIR"/src/*/*.el)
 TEST_FILES=("$THIS_DIR"/tests/test-*.el)
 REQUIRE_PACKAGES=(org cl-lib)
 
@@ -41,15 +45,28 @@ main() {
     done
     local l_args=""
     local loaded_files=()
-    for file in "${SOURCE_FILES[@]}"; do
-        if [[ -f "$file" && ! "$file" =~ "test-" ]]; then
-            if [ "$debug" = true ]; then
-                echo "Loading source: $file"
-            fi
-            l_args="$l_args -l $file"
-            loaded_files+=("$file")
+    
+    # Let's load everything in the right order to handle dependencies
+    
+    # First load the compatibility layer
+    compat_file="$THIS_DIR/src/compat.el"
+    if [[ -f "$compat_file" ]]; then
+        if [ "$debug" = true ]; then
+            echo "Loading compatibility layer: $compat_file"
         fi
-    done
+        l_args="$l_args -l $compat_file"
+        loaded_files+=("$compat_file")
+    fi
+    
+    # Then load the main elisp-test.el file
+    main_file="$THIS_DIR/elisp-test.el"
+    if [[ -f "$main_file" ]]; then
+        if [ "$debug" = true ]; then
+            echo "Loading main file: $main_file"
+        fi
+        l_args="$l_args -l $main_file"
+        loaded_files+=("$main_file")
+    fi
     for file in "${TEST_FILES[@]}"; do
         if [[ -f "$file" ]]; then
             if [ "$debug" = true ]; then
