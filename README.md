@@ -13,8 +13,8 @@ A testing framework for Emacs Lisp projects that integrates with ERT (Emacs Lisp
 ![Demo GIF](./docs/emacs-gif-screenshot-2025-03-05-09:13:39.gif)
 
 ## Example Test Reports
-- [`./ELISP-TEST-REPORT-20250305-091305-100-PERCENT.org`](./ELISP-TEST-REPORT-20250305-091305-100-PERCENT.org)
-- [`./tests/nested/ELISP-TEST-REPORT-20250305-091305-100-PERCENT.org`](./tests/nested/ELISP-TEST-REPORT-20250305-091305-100-PERCENT.org)
+- [`./tests/ELISP-TEST-REPORT-20250509-015650-98-PERCENT.org`](./tests/ELISP-TEST-REPORT-20250509-015650-98-PERCENT.org)
+- [`./tests/nested/ELISP-TEST-REPORT-20250509-015650-100-PERCENT.org`](./tests/nested/ELISP-TEST-REPORT-20250509-015650-100-PERCENT.org)
 
 ## Installation
 1. Clone the repository:
@@ -59,12 +59,21 @@ Create a `run-tests.el`:
 (setq ert-batch-print-level nil)
 (setq ert-batch-print-length nil)
 (load "~/.emacs.d/lisp/elisp-test/elisp-test.el")
-(elisp-test-run "~/path/to/tests")
+(elisp-test-run "~/path/to/tests" nil t) ; Third parameter t means skip confirmation
 ```
 
 Run from command line:
 ```bash
 emacs -Q --batch -l run-tests.el
+```
+
+For CI environments, you'll want to skip the confirmation prompt by setting the third parameter to `t`:
+```elisp
+;; elisp-test-run parameters:
+;; 1. Path(s) to test files or directories
+;; 2. Timeout per test in seconds (default: elisp-test-timeout-sec)
+;; 3. Skip confirmation prompt (default: nil)
+(elisp-test-run "~/path/to/tests" 10 t) ; Skip confirmation prompt, 10s timeout
 ```
 
 ## Configurations
