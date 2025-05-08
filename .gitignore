@@ -637,3 +637,5 @@ flycheck_*.el
 # EOFtests/.old/
 tests/.old
 tests/nested/.old
+
+**/.claude/settings.local.json
