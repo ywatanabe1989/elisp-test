@@ -1,0 +1,24 @@
+#+TITLE: Elisp Test Report
+#+AUTHOR: ywatanabe
+#+DATE: 2025-05-09 01:56:55 Created by https://github.com/ywatanabe1989/emacs-test
+
+* Test Results Summary
+
+- Passed: 6
+- Failed: 0
+- Skipped: 0
+- Timeout (= 10 s): 0
+- Duplicates: 0
+- Total: 6
+- Total Time: 4.89 seconds
+- Success Rate: 100.0%
+
+* Passed Tests (6)
+** test-elisp-test-summarize.el (1 tests)
+- [[file:test-elisp-test-summarize.el::test-elisp-test--report-results-saves-file][test-elisp-test--report-results-saves-file]]
+** test-elisp-test-variables.el (5 tests)
+- [[file:test-elisp-test-variables.el::test-elisp-test-buffer-name-defined][test-elisp-test-buffer-name-defined]]
+- [[file:test-elisp-test-variables.el::test-elisp-test-loadpath-defined][test-elisp-test-loadpath-defined]]
+- [[file:test-elisp-test-variables.el::test-elisp-test-timeout-sec-defined][test-elisp-test-timeout-sec-defined]]
+- [[file:test-elisp-test-variables.el::test-elisp-test-run-file-expressions-defined][test-elisp-test-run-file-expressions-defined]]
+- [[file:test-elisp-test-variables.el::test-elisp-test-run-file-exclude-expressions-defined][test-elisp-test-run-file-exclude-expressions-defined]]
