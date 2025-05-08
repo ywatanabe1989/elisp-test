@@ -190,7 +190,9 @@
               (list
                (cons file "test-func1"))
             (list
-             (cons file "test-func1"))))))
+             (cons file "test-func1")))))
+       ((symbol-function 'file-directory-p)
+        (lambda (path) t)))  ; Mock to ensure the directory path detection works
     (let
         ((result
           (--elisp-test-find-deftest "/tmp/test-dir")))
@@ -207,7 +209,28 @@
        (equal
         (cdr
          (nth 1 result))
-        "test-func1")))))
+        "test-func1"))))
+        
+;; Test the file path handling
+(ert-deftest test-elisp-test--find-deftest-with-file
+    ()
+  "Tests finding deftest forms with a file path."
+  (cl-letf
+      (((symbol-function '--elisp-test-find-test-files-single)
+        ;; This shouldn't be called for file paths
+        (lambda (path) (error "Should not be called for file paths")))
+       ((symbol-function '--elisp-test-find-deftest-file)
+        (lambda (file)
+          (list (cons file "test-function")))))
+    (let ((test-file "/tmp/test-file.el")
+          (file-exists-orig (symbol-function 'file-exists-p)))
+      (cl-letf (((symbol-function 'file-exists-p)
+                 (lambda (f) (string= f test-file)))
+                ((symbol-function 'file-directory-p)
+                 (lambda (f) nil)))
+        (let ((result (--elisp-test-find-deftest test-file)))
+          (should (= (length result) 1))
+          (should (equal (cdr (car result)) "test-function"))))))))
 
 (ert-deftest test-elisp-test--find-deftest-no-path
     ()

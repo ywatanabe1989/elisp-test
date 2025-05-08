@@ -26,7 +26,13 @@
         (erase-buffer)))
     (condition-case err
         (progn
-          (load file nil t)
+          ;; Modify to handle already loaded tests by suppressing redefinition errors
+          (let ((ert-test-redefinition-messages nil)) ; locally suppress redefinition warnings
+            (condition-case load-err
+                (load file nil t)
+              ;; If we get a redefinition error, just continue since the test is already loaded
+              (error (when (not (string-match-p "redefined" (error-message-string load-err)))
+                       (signal (car load-err) (cdr load-err))))))
           (let
               ((test-symbol
                 (intern testname)))
