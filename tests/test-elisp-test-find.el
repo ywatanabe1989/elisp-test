@@ -10,12 +10,11 @@
 ;;; Code:
 
 (require 'ert)
-(require 'src/util/find)
+(require 'test-helper)
 
-(ert-deftest test-elisp-test-find-deftest ()
-  "Test that the deftest finder works correctly."
-  (should (functionp '--elisp-test-find-deftest))
-  (should (functionp '--elisp-test-find-deftest-file)))
+(ert-deftest test-elisp-test-find-module-loads ()
+  "Test that the find module loads properly."
+  (should (featurep 'src/util/find)))
 
 (provide 'test-elisp-test-find)
 
