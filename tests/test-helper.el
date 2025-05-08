@@ -24,6 +24,9 @@
 ;; Load the main elisp-test file
 (require 'elisp-test)
 
+;; Make sure we load all modules explicitly
+(require 'src/util/find)
+
 ;; Export key variables for tests to use
 (defconst elisp-test-buffer-name "*elisp-test*"
   "Buffer name used in tests.")
