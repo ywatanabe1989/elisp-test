@@ -78,6 +78,16 @@ main() {
         loaded_files+=("$main_file")
     fi
     
+    # Load the test helper
+    test_helper="$THIS_DIR/tests/test-helper.el"
+    if [[ -f "$test_helper" ]]; then
+        if [ "$debug" = true ]; then
+            echo "Loading test helper: $test_helper"
+        fi
+        l_args="$l_args -l $test_helper"
+        loaded_files+=("$test_helper")
+    fi
+    
     # Load tests - either a single test file or all test files
     if [[ -n "$single_test" ]]; then
         if [[ -f "$single_test" ]]; then

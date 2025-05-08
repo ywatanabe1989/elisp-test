@@ -10,13 +10,13 @@
 ;;; Code:
 
 (require 'ert)
-(require 'elisp-test)
+(require 'test-helper)
 
 (ert-deftest test-elisp-test-variables-exist ()
   "Test that the core variables are defined."
-  (should (boundp 'elisp-test-buffer-name))
-  (should (boundp 'elisp-test-timeout-sec))
-  (should (boundp 'elisp-test-run-file-expressions)))
+  (should (stringp elisp-test-buffer-name))
+  (should (integerp elisp-test-timeout-sec))
+  (should (listp elisp-test-run-file-expressions)))
 
 (provide 'test-elisp-test-variables)
 
