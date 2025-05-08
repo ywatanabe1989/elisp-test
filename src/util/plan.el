@@ -12,9 +12,9 @@
 
 ;;; Code:
 
-(require 'elisp-test-core-variables)
-(require 'elisp-test-ui-buffer)
-(require 'elisp-test-util-find)
+(require 'src/core/variables)
+(require 'src/ui/buffer)
+(require 'src/util/find)
 
 (defun elisp-test--prepare-test-plan (paths)
   "Create test execution plan from PATHS and return list of tests."

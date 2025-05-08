@@ -12,7 +12,7 @@
 
 ;;; Code:
 
-(require 'elisp-test-core-variables)
+(require 'src/core/variables)
 
 (defun elisp-test-buffer-create (buffer-name)
   "Create or return a buffer with BUFFER-NAME."

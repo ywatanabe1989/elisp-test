@@ -12,8 +12,8 @@
 
 ;;; Code:
 
-(require 'elisp-test-core-variables)
-(require 'elisp-test-ui-buffer)
+(require 'src/core/variables)
+(require 'src/ui/buffer)
 
 (defun elisp-test--report-results
     (buffer test-results &optional timeout-per-test total-time-spent timestamp)
