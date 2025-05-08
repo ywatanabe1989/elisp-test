@@ -26,19 +26,29 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 usage() {
-    echo "Usage: $0 [-d|--debug] [-h|--help]"
+    echo "Usage: $0 [-d|--debug] [-s|--single TEST_FILE] [-h|--help]"
     echo "Runs tests for this project"
     echo
     echo "Options:"
     echo "  -d, --debug    Enable debug output"
+    echo "  -s, --single   Run a single test file"
     echo "  -h, --help     Display this help message"
     exit 1
 }
 main() {
     local debug=false
+    local single_test=""
     while [[ $# -gt 0 ]]; do
         case $1 in
             -d|--debug) debug=true; shift ;;
+            -s|--single) 
+                if [[ -z "$2" || "$2" == -* ]]; then
+                    echo "Error: -s|--single option requires a test file path"
+                    usage
+                fi
+                single_test="$2"
+                shift 2 
+                ;;
             -h|--help) usage ;;
             *) echo "Unknown option: $1"; usage ;;
         esac
@@ -67,15 +77,30 @@ main() {
         l_args="$l_args -l $main_file"
         loaded_files+=("$main_file")
     fi
-    for file in "${TEST_FILES[@]}"; do
-        if [[ -f "$file" ]]; then
+    
+    # Load tests - either a single test file or all test files
+    if [[ -n "$single_test" ]]; then
+        if [[ -f "$single_test" ]]; then
             if [ "$debug" = true ]; then
-                echo "Loading test: $file"
+                echo "Loading single test: $single_test"
             fi
-            l_args="$l_args -l $file"
-            loaded_files+=("$file")
+            l_args="$l_args -l $single_test"
+            loaded_files+=("$single_test")
+        else
+            echo "Error: Test file not found: $single_test"
+            exit 1
         fi
-    done
+    else
+        for file in "${TEST_FILES[@]}"; do
+            if [[ -f "$file" ]]; then
+                if [ "$debug" = true ]; then
+                    echo "Loading test: $file"
+                fi
+                l_args="$l_args -l $file"
+                loaded_files+=("$file")
+            fi
+        done
+    fi
     load_paths=""
     for path in "${PATHS[@]}"; do
         if [[ -d "$path" ]]; then
