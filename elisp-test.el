@@ -25,6 +25,12 @@
 (require 'src/core/run)
 (require 'src/core/main)
 
+;; Make sure core variables are accessible
+(eval-and-compile
+  (defvar elisp-test-buffer-name)
+  (defvar elisp-test-timeout-sec)
+  (defvar elisp-test-run-file-expressions))
+
 ;; UI components
 (require 'src/ui/buffer)
 (require 'src/ui/report)

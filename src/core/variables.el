@@ -23,22 +23,18 @@
   '()
   "List of load paths for tests.")
 
-(defvar elisp-test-buffer-name
+;; Define these with defconst to make sure they're always available
+(defconst elisp-test-buffer-name
   "*elisp-test*"
   "Name of the buffer used for elisp test results.")
 
-(defcustom elisp-test-timeout-sec
+(defconst elisp-test-timeout-sec
   10
-  "Default timeout in seconds for running a single test."
-  :type 'integer
-  :group 'elisp-test)
+  "Default timeout in seconds for running a single test.")
 
-(defcustom elisp-test-run-file-expressions
+(defconst elisp-test-run-file-expressions
   '("^test-.*\\.el$")
-  "List of regular expressions to match test files."
-  :type
-  '(repeat string)
-  :group 'elisp-test)
+  "List of regular expressions to match test files.")
 
 (defcustom elisp-test-run-file-exclude-expressions
   '("/\\.[^/]*/"        ; Hidden directories
