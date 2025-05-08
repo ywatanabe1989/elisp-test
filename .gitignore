@@ -639,3 +639,7 @@ tests/.old
 tests/nested/.old
 
 **/.claude/settings.local.json
+
+# Test report files
+**/ELISP-TEST-REPORT*.org
+**/ELISP-TEST-REPORT*.pdf
