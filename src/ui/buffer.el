@@ -129,6 +129,6 @@
       (pop-to-buffer test-buffer)
       buffer)))
 
-(provide 'elisp-test-ui-buffer)
+(provide 'src/ui/buffer)
 
 ;;; elisp-test-ui-buffer.el ends here

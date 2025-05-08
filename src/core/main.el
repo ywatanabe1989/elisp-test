@@ -11,12 +11,12 @@
 
 ;;; Code:
 
-(require 'elisp-test-core-variables)
-(require 'elisp-test-core-run)
-(require 'elisp-test-util-find)
-(require 'elisp-test-util-plan)
-(require 'elisp-test-ui-buffer)
-(require 'elisp-test-ui-report)
+(require 'src/core/variables)
+(require 'src/core/run)
+(require 'src/util/find)
+(require 'src/util/plan)
+(require 'src/ui/buffer)
+(require 'src/ui/report)
 
 ;;;###autoload
 (defun elisp-test-run
@@ -121,6 +121,6 @@ With NO-CONFIRM non-nil, skip confirmation prompt."
   (when (elisp-test-buffer "*ert*")
     (kill-buffer "*ert*")))
 
-(provide 'elisp-test-core-main)
+(provide 'src/core/main)
 
 ;;; elisp-test-core-main.el ends here

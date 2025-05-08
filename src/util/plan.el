@@ -74,6 +74,6 @@
 
       tests)))
 
-(provide 'elisp-test-util-plan)
+(provide 'src/util/plan)
 
 ;;; elisp-test-util-plan.el ends here

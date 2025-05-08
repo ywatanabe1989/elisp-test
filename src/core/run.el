@@ -11,8 +11,8 @@
 
 ;;; Code:
 
-(require 'elisp-test-core-variables)
-(require 'elisp-test-ui-buffer)
+(require 'src/core/variables)
+(require 'src/ui/buffer)
 
 (defun elisp-test--run-single-test
     (test &optional timeout)
@@ -89,6 +89,6 @@ Tests are run sequentially to avoid loading conflicts."
    test-alist))
 
 
-(provide 'elisp-test-core-run)
+(provide 'src/core/run)
 
 ;;; elisp-test-core-run.el ends here
