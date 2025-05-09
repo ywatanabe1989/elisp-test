@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:35:00>
+;;; Timestamp: <2025-05-09 17:40:27>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-core-variables.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -17,6 +17,42 @@
 (defvar elisp-test-loadpath
   '()
   "List of load paths for tests.")
+
+(defvar elisp-test-report-base-name
+  "ELISP-TEST-REPORT"
+  "WRITE HERE")
+
+;; (defcustom elisp-test-results-org-path
+;;   (expand-file-name "ELISP-TEST.org" user-emacs-directory)
+;;   "Path to save test results in org format."
+;;   :type 'string
+;;   :group 'elisp-test)
+
+;; ;; Then define the path for dired, which depends on the base path
+
+;; (defcustom elisp-test-results-org-path-dired
+;;   (file-name-nondirectory elisp-test-results-org-path)
+;;   "Filename for test results when running from dired."
+;;   :type 'string
+;;   :group 'elisp-test)
+
+(defcustom elisp-test-results-org-path
+  nil
+  "Path to save test results in org format."
+  :type 'string
+  :group 'elisp-test)
+
+;; Then define the path for dired, which depends on the base path
+
+(defcustom elisp-test-results-org-path-dired
+  nil
+  "Filename for test results when running from dired."
+  :type 'string
+  :group 'elisp-test)
+
+(defvar elisp-test-results-org-path-final
+  nil
+  "Filepath for test results")
 
 ;; Define these with defconst to make sure they're always available
 
@@ -55,24 +91,6 @@
 ;;   :type 'string
 ;;   :group 'elisp-test)
 ;; First define the base path
-
-(defcustom elisp-test-results-org-path
-  (expand-file-name "ELISP-TEST.org" user-emacs-directory)
-  "Path to save test results in org format."
-  :type 'string
-  :group 'elisp-test)
-
-;; Then define the path for dired, which depends on the base path
-
-(defcustom elisp-test-results-org-path-dired
-  (file-name-nondirectory elisp-test-results-org-path)
-  "Filename for test results when running from dired."
-  :type 'string
-  :group 'elisp-test)
-
-(defvar elisp-test-results-org-path-switched
-  nil
-  "Filepath for test results")
 
 (defvar elisp-test-plan-buffer-name
   "*ELISP-TEST-PLAN*"
