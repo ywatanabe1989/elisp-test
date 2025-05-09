@@ -6,25 +6,14 @@
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
 
-;;; elisp-test-core-main.el --- Main functionality for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:16:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; Provides the main user-facing functions for the elisp-test framework.
-
-;;; Code:
-
 (require 'et-core-variables)
 (require 'et-core-run)
 (require 'et-utils-find)
 (require 'et-utils-plan)
 (require 'et-ui-buffer)
 (require 'et-ui-report)
+
+
 
 ;; Functions to run tests from a buffer
 
@@ -74,7 +63,7 @@
   "Determine where test reports should be saved based on context."
   (let ((default-org-path
          (or elisp-test-results-org-path
-             (expand-file-name "ELISP-TEST.org" default-directory))))
+             (expand-file-name (format "%s.org" elisp-test-report-base-name) default-directory))))
     (if (eq major-mode 'dired-mode)
         ;; In dired mode - use the current directory for report
         (expand-file-name elisp-test-results-org-path-dired
@@ -130,7 +119,7 @@ Uses TIMEOUT, TOTAL-TIME and TIMESTAMP for report generation."
       ;; For each directory, create a report with only its tests
       (dolist (dir directories)
         ;; Set the report path to be in this directory
-        (let ((elisp-test-results-org-path-switched
+        (let ((elisp-test-results-org-path-final
                (expand-file-name elisp-test-results-org-path-dired dir))
               ;; Filter test results to only those in this directory
               (filtered-results
@@ -163,7 +152,7 @@ Results are consolidated into a single report."
   (interactive)
 
   ;; Determine where to save the report
-  (setq elisp-test-results-org-path-switched
+  (setq elisp-test-results-org-path-final
         (elisp-test--determine-report-path))
 
   ;; Check if called in a buffer with a file
