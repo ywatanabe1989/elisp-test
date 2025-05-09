@@ -1,0 +1,36 @@
+#+TITLE: Elisp Test Report
+#+AUTHOR: ywatanabe
+#+DATE: 2025-05-09 20:18:26 Created by https://github.com/ywatanabe1989/emacs-test
+
+* Test Results Summary
+
+- Passed: 10
+- Failed: 0
+- Skipped: 0
+- Timeout (= 10 s): 0
+- Duplicates: 0
+- Total: 10
+- Total Time: 0.06 seconds
+- Success Rate: 100.0%
+
+* Passed Tests (10)
+** test-elisp-test-variables.el (1 tests)
+- [[file:tests/nested/test-elisp-test-variables.el::test-elisp-test-variables-nested-buffer-name][test-elisp-test-variables-nested-buffer-name]]
+** test-elisp-test-find.el (1 tests)
+- [[file:tests/test-elisp-test-find.el::test-elisp-test-find-module-loads][test-elisp-test-find-module-loads]]
+** test-elisp-test-variables.el (1 tests)
+- [[file:tests/test-elisp-test-variables.el::test-elisp-test-variables-exist][test-elisp-test-variables-exist]]
+** test-et-core-loadpath.el (1 tests)
+- [[file:tests/test-et-core-loadpath.el::test-et-core-loadpath-module-loads][test-et-core-loadpath-module-loads]]
+** test-et-core-main.el (1 tests)
+- [[file:tests/test-et-core-main.el::test-et-core-main-module-loads][test-et-core-main-module-loads]]
+** test-et-core-run.el (1 tests)
+- [[file:tests/test-et-core-run.el::test-et-core-run-module-loads][test-et-core-run-module-loads]]
+** test-et-ui-buffer.el (1 tests)
+- [[file:tests/test-et-ui-buffer.el::test-et-ui-buffer-module-loads][test-et-ui-buffer-module-loads]]
+** test-et-ui-report.el (1 tests)
+- [[file:tests/test-et-ui-report.el::test-et-ui-report-module-loads][test-et-ui-report-module-loads]]
+** test-et-utils-parse.el (1 tests)
+- [[file:tests/test-et-utils-parse.el::test-et-utils-parse-module-loads][test-et-utils-parse-module-loads]]
+** test-et-utils-plan.el (1 tests)
+- [[file:tests/test-et-utils-plan.el::test-et-utils-plan-module-loads][test-et-utils-plan-module-loads]]

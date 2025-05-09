@@ -1,12 +1,12 @@
 <!-- ---
-!-- Timestamp: 2025-05-07 14:01:29
+!-- Timestamp: 2025-05-09 19:29:59
 !-- Author: ywatanabe
 !-- File: /home/ywatanabe/.emacs.d/lisp/elisp-test/README.md
 !-- --- -->
 
 # Elisp Test
 
-[![Build Status](https://github.com/ywatanabe1989/elisp-test/workflows/tests/badge.svg)](https://github.com/ywatanabe1989/elisp-test/actions)
+[![Build Status](https://github.com/ywatanabe1989/elisp-test/workflows/run_tests/badge.svg)](https://github.com/ywatanabe1989/elisp-test/actions)
 
 A testing framework for Emacs Lisp projects that integrates with ERT (Emacs Lisp Regression Testing).
 
