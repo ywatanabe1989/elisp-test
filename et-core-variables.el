@@ -1,23 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:12:29>
+;;; Timestamp: <2025-05-09 14:28:46>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-core-variables.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-
-;;; elisp-test-core-variables.el --- Core variables for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:10:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; This module defines variables used across the elisp-test framework.
-
-;;; Code:
 
 (defgroup elisp-test
   nil
@@ -83,10 +70,6 @@ In addition to the consolidated report, each directory will get its own
 report with only the tests from that directory."
   :type 'boolean
   :group 'elisp-test)
-
-;; Provide both the new namespace and the original name for compatibility
-
-;;; elisp-test-core-variables.el ends here
 
 
 (provide 'et-core-variables)
