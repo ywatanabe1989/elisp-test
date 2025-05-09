@@ -20,10 +20,10 @@
 ;;; Code:
 
 ;; Core functionality
-(require 'src/core/variables)
-(require 'src/core/loadpath)
-(require 'src/core/run)
-(require 'src/core/main)
+(require 'et-core-variables)
+(require 'et-core-loadpath)
+(require 'et-core-run)
+(require 'et-core-main)
 
 ;; Make sure core variables are accessible
 (eval-and-compile
@@ -32,16 +32,15 @@
   (defvar elisp-test-run-file-expressions))
 
 ;; UI components
-(require 'src/ui/buffer)
-(require 'src/ui/report)
+(require 'et-ui-buffer)
+(require 'et-ui-report)
 
 ;; Utility functions
-(require 'src/util/find)
-(require 'src/util/parse)
-(require 'src/util/plan)
+(require 'et-utils-find)
+(require 'et-utils-parse)
+(require 'et-utils-plan)
 
-;; Directly expose main user-facing functions
-(defalias 'elisp-test-run 'src/core/main-run)
+;; No need for alias since function is already defined in et-core-main.el
 
 ;; Avoid loading this file twice
 (provide 'elisp-test)
