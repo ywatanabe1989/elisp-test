@@ -1,23 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 13:07:59>
+;;; Timestamp: <2025-05-09 14:28:48>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-utils-parse.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-
-;;; elisp-test-util-parse.el --- Test results parsing for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:20:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; Provides parsing utilities for test results in the elisp-test framework.
-
-;;; Code:
 
 (defun elisp-test--parse-test-result (result)
   "Parse test RESULT and return status in consistent format.
@@ -72,8 +59,6 @@ Result can be either a string or a list with the result in the 3rd position."
           (if error-start
               (substring result-str (+ error-start 1))
             result-str))))))
-
-;;; elisp-test-util-parse.el ends here
 
 
 (provide 'et-utils-parse)
