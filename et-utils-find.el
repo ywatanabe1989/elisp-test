@@ -1,22 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 13:07:59>
+;;; Timestamp: <2025-05-09 14:28:48>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-utils-find.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-;;; elisp-test-util-find.el --- File finding utilities for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:18:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; Provides file finding utilities for the elisp-test framework.
-
-;;; Code:
 
 (require 'et-core-variables)
 
@@ -236,7 +224,6 @@ PATHS can be a single path or a list of paths."
         (when (file-exists-p path)
           (setq tests (append tests (--elisp-test-find-deftest-file path))))))))
 
-;;; elisp-test-util-find.el ends here
 
 (provide 'et-utils-find)
 
