@@ -211,8 +211,8 @@ Results are consolidated into a single report."
 (defun elisp-test--prepare-test-plan (paths)
   "Create a test plan from PATHS by extracting ert-deftest definitions."
   (when paths
-    (message "Preparing test plan from %d files/directories"
-             (length paths))
+    ;; (message "Preparing test plan from %d files/directories"
+    ;;          (length paths))
     (--elisp-test-find-deftest paths)))
 
 ;;; elisp-test-core-main.el ends here
