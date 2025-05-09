@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:28:46>
+;;; Timestamp: <2025-05-09 14:35:00>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-core-variables.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -43,11 +43,26 @@
   '(repeat string)
   :group 'elisp-test)
 
+;; (defcustom elisp-test-results-org-path
+;;   nil
+;;   "File path where test results will be saved."
+;;   :type 'file
+;;   :group 'elisp-test)
+
+;; (defcustom elisp-test-results-org-path-dired
+;;   (file-name-nondirectory elisp-test-results-org-path)
+;;   "Filename for test results when running from dired."
+;;   :type 'string
+;;   :group 'elisp-test)
+;; First define the base path
+
 (defcustom elisp-test-results-org-path
-  nil
-  "File path where test results will be saved."
-  :type 'file
+  (expand-file-name "ELISP-TEST.org" user-emacs-directory)
+  "Path to save test results in org format."
+  :type 'string
   :group 'elisp-test)
+
+;; Then define the path for dired, which depends on the base path
 
 (defcustom elisp-test-results-org-path-dired
   (file-name-nondirectory elisp-test-results-org-path)
