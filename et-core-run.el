@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:28:46>
+;;; Timestamp: <2025-05-09 14:35:52>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-core-run.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -86,7 +86,6 @@
 Tests are run sequentially to avoid loading conflicts."
   (interactive)
   ;; Sequential execution
-  (message "Running tests sequentially")
   (let ((results (mapcar
                   (lambda (test)
                     (elisp-test--run-single-test test timeout-per-test))
