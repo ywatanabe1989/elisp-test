@@ -1,24 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 13:07:58>
+;;; Timestamp: <2025-05-09 14:28:47>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-ui-buffer.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-
-;;; elisp-test-ui-buffer.el --- Buffer manipulation utilities for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:30:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; Provides buffer manipulation utilities for the elisp-test framework.
-;; These functions create, manage, and display test buffers.
-
-;;; Code:
 
 (require 'et-core-variables)
 
@@ -147,8 +133,6 @@
       (pop-to-buffer buffer)
       (pop-to-buffer test-buffer)
       buffer)))
-
-;;; elisp-test-ui-buffer.el ends here
 
 
 (provide 'et-ui-buffer)
