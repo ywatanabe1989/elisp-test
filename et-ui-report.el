@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:28:47>
+;;; Timestamp: <2025-05-09 17:43:29>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-ui-report.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -15,7 +15,10 @@
   "Save results from BUFFER using TEST-RESULTS to file if needed."
   (let* ((test-names (make-hash-table :test 'equal))
          (report-dir
-          (file-name-directory elisp-test-results-org-path-switched))
+          (file-name-directory elisp-test-results-org-path-final))
+         (_
+          (message "Directory for report: %s"
+                   report-dir))
          (old-dir (expand-file-name ".old" report-dir))
          ;; Use provided timestamp or generate a new one
          (timestamp
@@ -38,13 +41,13 @@
           (replace-regexp-in-string
            "\\.org$"
            (format "-%s-%s.org" timestamp success-rate-str)
-           elisp-test-results-org-path-switched))
+           elisp-test-results-org-path-final))
          (pdf-file-with-rate
           (replace-regexp-in-string
            "\\.pdf$"
            (format "-%s-%s.pdf" timestamp success-rate-str)
            (concat (file-name-sans-extension
-                    elisp-test-results-org-path-switched)
+                    elisp-test-results-org-path-final)
                    ".pdf"))))
 
     ;; Create .old directory if it doesn't exist
@@ -53,7 +56,8 @@
 
     ;; Move old reports to .old directory (only in the report directory)
     (dolist (file (directory-files report-dir t
-                                   "ELISP-TEST-REPORT.*\\.\\(org\\|pdf\\)$"))
+                                   (format "%s.*\\.\\(org\\|pdf\\)$"
+                                           elisp-test-report-base-name)))
       (when (and (file-regular-p file)
                  (not (string-equal
                        (file-name-nondirectory file)
