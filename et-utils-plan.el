@@ -1,24 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 13:08:00>
+;;; Timestamp: <2025-05-09 14:28:49>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-utils-plan.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-
-;;; elisp-test-util-plan.el --- Test planning utilities for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:25:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; Provides test planning utilities for the elisp-test framework.
-;; Used to create and display test execution plans.
-
-;;; Code:
 
 (require 'et-core-variables)
 (require 'et-ui-buffer)
