@@ -1,24 +1,10 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 13:07:58>
+;;; Timestamp: <2025-05-09 14:28:47>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-ui-report.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-
-;;; elisp-test-ui-report.el --- Test report generation for elisp-test -*- lexical-binding: t -*-
-
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:35:00>
-
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-
-;;; Commentary:
-
-;; Provides test report generation functions for the elisp-test framework.
-;; This module handles creating and exporting test reports in Org format.
-
-;;; Code:
 
 (require 'et-core-variables)
 (require 'et-ui-buffer)
@@ -277,8 +263,6 @@
                            (line (split-string error-content "\n"))
                          (insert (format "    %s\n" line)))))))))
            files-hash))))))
-
-;;; elisp-test-ui-report.el ends here
 
 
 (provide 'et-ui-report)
