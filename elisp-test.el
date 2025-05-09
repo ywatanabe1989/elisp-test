@@ -1,21 +1,33 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-03-02 21:48:11>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/elisp-test.el
+;;; Timestamp: <2025-05-09 14:38:53>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test.el
 
-;; Main entry point, requiring all other modules and providing the `elisp-test` feature.
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-;;; elisp-test.el --- Main entry point for the Emacs Lisp testing framework -*- lexical-binding: t; -*-
 
-(require 'elisp-test-variables)
-(require 'elisp-test-loadpath)
-(require 'elisp-test-buffer)
-(require 'elisp-test-find)
-(require 'elisp-test-run)
-(require 'elisp-test-parse)
-(require 'elisp-test-report)
-(require 'elisp-test-plan)
-(require 'elisp-test-main)
+;; Core functionality
+(require 'et-core-variables)
+(require 'et-core-loadpath)
+(require 'et-core-run)
+(require 'et-core-main)
+
+;; Make sure core variables are accessible
+(eval-and-compile
+  (defvar elisp-test-buffer-name)
+  (defvar elisp-test-timeout-sec)
+  (defvar elisp-test-run-file-expressions))
+
+;; UI components
+(require 'et-ui-buffer)
+(require 'et-ui-report)
+
+;; Utility functions
+(require 'et-utils-find)
+(require 'et-utils-parse)
+(require 'et-utils-plan)
+(require 'et-ui-suppress-message)
+
 
 (provide 'elisp-test)
 

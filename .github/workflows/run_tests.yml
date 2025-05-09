@@ -1,7 +1,7 @@
-# Timestamp: "2025-02-25 02:12:14 (ywatanabe)"
-# File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/.github/workflows/test.yml
+# Timestamp: "2025-05-09 18:22:33 (ywatanabe)"
+# File: /home/ywatanabe/.emacs.d/lisp/elisp-test/.github/workflows/run_tests.yml
 
-name: tests
+name: run_tests
 on:
   push:
     paths-ignore:
@@ -32,6 +32,6 @@ jobs:
           version: ${{ matrix.emacs_version }}
       - name: run-tests
         run: |
-          ./run-tests.sh
+          ./run_tests.sh --elisp-test .
 
 # EOF

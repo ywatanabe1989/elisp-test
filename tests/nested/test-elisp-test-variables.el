@@ -1,62 +1,23 @@
-;;; -*- coding: utf-8; lexical-binding: t -*-
-;;; Author: ywatanabe
-;;; Timestamp: <2025-02-25 01:40:27>
-;;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-test/tests/-test-elisp-test-variables.el
+;;; test-elisp-test-variables.el --- Test variables module (nested) -*- lexical-binding: t -*-
+
+;; Author: ywatanabe
+;; Timestamp: <2025-05-09 03:30:00>
+
+;;; Commentary:
+
+;; Tests for the elisp-test-variables module (nested directory)
+
+;;; Code:
 
 (require 'ert)
-(require 'elisp-test-variables)
 
-(ert-deftest test-et-buffer-name-defined
-    ()
-  (should
-   (boundp 'et-buffer-name))
-  (should
-   (stringp et-buffer-name))
-  (should
-   (string= et-buffer-name "*elisp-test*")))
+(require 'et-core-variables)
 
-(ert-deftest test-et-loadpath-defined
-    ()
-  (should
-   (boundp 'et-loadpath))
-  (should
-   (listp et-loadpath)))
+(ert-deftest test-elisp-test-variables-nested-buffer-name ()
+  "Test that the buffer name variable is defined correctly (nested)."
+  (should (stringp elisp-test-buffer-name))
+  (should (string= "*elisp-test*" elisp-test-buffer-name)))
 
-(ert-deftest test-et-timeout-sec-defined
-    ()
-  (should
-   (boundp 'et-timeout-sec))
-  (should
-   (integerp et-timeout-sec))
-  (should
-   (= et-timeout-sec 10)))
+(provide 'test-elisp-test-variables-nested)
 
-(ert-deftest test-et-test-file-expressions-defined
-    ()
-  (should
-   (boundp 'et-test-file-expressions))
-  (should
-   (listp et-test-file-expressions))
-  (should
-   (string=
-    (car et-test-file-expressions)
-    "^test-.*\\.el$")))
-
-(ert-deftest test-et-test-file-exclude-expressions-defined
-    ()
-  (should
-   (boundp 'et-test-file-exclude-expressions))
-  (should
-   (listp et-test-file-exclude-expressions))
-  (should
-   (=
-    (length et-test-file-exclude-expressions)
-    4)))
-
-(provide '-test-elisp-test-variables)
-
-(when
-    (not load-file-name)
-  (message "-test-elisp-test-variables.el loaded."
-           (file-name-nondirectory
-            (or load-file-name buffer-file-name))))
+;;; test-elisp-test-variables.el ends here
