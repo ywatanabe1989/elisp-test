@@ -1,23 +1,10 @@
-;;; elisp-test.el --- Testing framework for Emacs Lisp projects -*- lexical-binding: t -*-
+;;; -*- coding: utf-8; lexical-binding: t -*-
+;;; Author: ywatanabe
+;;; Timestamp: <2025-05-09 14:28:44>
+;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test.el
 
-;; Author: ywatanabe
-;; Timestamp: <2025-05-09 02:55:00>
-;; File: /home/ywatanabe/.dotfiles/.emacs.d/lisp/emacs-cheat/elisp-test.el
-;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
-;; Version: 1.0.0
-;; Package-Requires: ((emacs "26.1"))
-;; Keywords: tools, testing
-;; URL: https://github.com/ywatanabe1989/elisp-test
+;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
 
-;;; Commentary:
-
-;; A testing framework for Emacs Lisp projects that integrates with
-;; ERT (Emacs Lisp Regression Testing).
-;;
-;; This package provides utilities for organizing and running tests,
-;; generating reports, and managing test infrastructure.
-
-;;; Code:
 
 ;; Core functionality
 (require 'et-core-variables)
@@ -40,9 +27,11 @@
 (require 'et-utils-parse)
 (require 'et-utils-plan)
 
-;; No need for alias since function is already defined in et-core-main.el
 
-;; Avoid loading this file twice
 (provide 'elisp-test)
 
-;;; elisp-test.el ends here
+(when
+    (not load-file-name)
+  (message "elisp-test.el loaded."
+           (file-name-nondirectory
+            (or load-file-name buffer-file-name))))
