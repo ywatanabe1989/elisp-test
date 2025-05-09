@@ -10,7 +10,8 @@
 ;;; Code:
 
 (require 'ert)
-(require 'src/core/variables)
+
+(require 'et-core-variables)
 
 (ert-deftest test-elisp-test-variables-nested-buffer-name ()
   "Test that the buffer name variable is defined correctly (nested)."
