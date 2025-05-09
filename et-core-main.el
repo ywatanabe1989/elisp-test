@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:28:45>
+;;; Timestamp: <2025-05-09 20:04:51>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/et-core-main.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -12,8 +12,6 @@
 (require 'et-utils-plan)
 (require 'et-ui-buffer)
 (require 'et-ui-report)
-
-
 
 ;; Functions to run tests from a buffer
 
@@ -59,20 +57,36 @@
 
 ;; Helper function to determine report path
 
+;; (defun elisp-test--determine-report-path ()
+;;   "Determine where test reports should be saved based on context."
+;;   (let ((default-org-path
+;;          (or elisp-test-results-org-path
+;;              (expand-file-name
+;;               (format "%s.org" elisp-test-report-base-name)
+;;               default-directory))))
+;;     (if (eq major-mode 'dired-mode)
+;;         ;; In dired mode - use the current directory for report
+;;         (expand-file-name elisp-test-results-org-path-dired
+;;                           default-directory)
+;;       ;; Otherwise use the default
+;;       default-org-path)))
+
 (defun elisp-test--determine-report-path ()
   "Determine where test reports should be saved based on context."
   (let ((default-org-path
          (or elisp-test-results-org-path
-             (expand-file-name (format "%s.org" elisp-test-report-base-name) default-directory))))
+             (expand-file-name
+              (format "%s.org" elisp-test-report-base-name)
+              (or default-directory "~/")))))
     (if (eq major-mode 'dired-mode)
         ;; In dired mode - use the current directory for report
-        (expand-file-name elisp-test-results-org-path-dired
-                          default-directory)
+        (expand-file-name
+         (or elisp-test-results-org-path-dired
+             (format "%s.org" elisp-test-report-base-name))
+         default-directory)
       ;; Otherwise use the default
       default-org-path)))
-
 ;; Helper function to confirm test execution
-
 (defun elisp-test--confirm-and-get-timeout
     (test-alist no-confirm timeout-per-test)
   "Confirm running tests in TEST-ALIST and get timeout.
@@ -135,42 +149,86 @@ Uses TIMEOUT, TOTAL-TIME and TIMESTAMP for report generation."
            total-time
            timestamp))))))
 
+;; ;;;###autoload
+;; (defun elisp-test-run
+;;     (&optional root-paths timeout-per-test no-confirm)
+;;   "Run tests from ROOT-PATHS, marked files in dired, or current buffer.
+;; When run in a buffer with a file, only run tests from that file.
+;; With NO-CONFIRM non-nil, skip confirmation prompt.
+
+;; This function handles different invocation scenarios:
+;; 1. When called from a buffer with a file, runs tests from that file
+;; 2. When called from dired with marked files, runs tests from those files
+;; 3. When called with explicit ROOT-PATHS, runs tests from those paths
+;; 4. When called without arguments, runs tests from current directory
+
+;; Results are consolidated into a single report."
+;;   (interactive)
+
+;;   ;; Determine where to save the report
+;;   (setq elisp-test-results-org-path-final
+;;         (elisp-test--determine-report-path))
+
+;;   ;; Check if called in a buffer with a file
+;;   (if (and buffer-file-name (not root-paths))
+;;       ;; Case 1: Run tests from the current buffer's file
+;;       (elisp-test--run-buffer buffer-file-name)
+
+;;     ;; Case 2: Run tests from specified paths
+;;     (let* ((paths-defined-by-a-method
+;;             (elisp-test--determine-test-paths root-paths))
+;;            (test-alist
+;;             (elisp-test--prepare-test-plan paths-defined-by-a-method))
+;;            (timeout-confirmed
+;;             (elisp-test--confirm-and-get-timeout
+;;              test-alist no-confirm timeout-per-test)))
+
+;;       (when timeout-confirmed
+;;         ;; Run the tests and get results
+;;         (let* ((execution-data
+;;                 (elisp-test--execute-tests test-alist
+;;                                            timeout-confirmed))
+;;                (timestamp (plist-get execution-data :timestamp))
+;;                (test-results (plist-get execution-data :results))
+;;                (total-time-spent
+;;                 (plist-get execution-data :total-time)))
+
+;;           ;; Generate the main consolidated report
+;;           (elisp-test--report-results
+;;            (elisp-test-buffer-create "*elisp-test-results*")
+;;            test-results
+;;            timeout-confirmed
+;;            total-time-spent
+;;            timestamp)
+
+;;           ;; Generate per-directory reports if configured
+;;           (elisp-test--generate-per-directory-reports
+;;            test-results timeout-confirmed total-time-spent timestamp)))))
+
+;;   ;; Clean up temporary buffers
+;;   (when (elisp-test-buffer "*ert*")
+;;     (kill-buffer "*ert*")))
 ;;;###autoload
+
 (defun elisp-test-run
     (&optional root-paths timeout-per-test no-confirm)
-  "Run tests from ROOT-PATHS, marked files in dired, or current buffer.
-When run in a buffer with a file, only run tests from that file.
-With NO-CONFIRM non-nil, skip confirmation prompt.
-
-This function handles different invocation scenarios:
-1. When called from a buffer with a file, runs tests from that file
-2. When called from dired with marked files, runs tests from those files
-3. When called with explicit ROOT-PATHS, runs tests from those paths
-4. When called without arguments, runs tests from current directory
-
-Results are consolidated into a single report."
+  "Run tests from ROOT-PATHS, marked files in dired, or current buffer."
   (interactive)
-
-  ;; Determine where to save the report
+  ;; Ensure we have a valid report path
   (setq elisp-test-results-org-path-final
         (elisp-test--determine-report-path))
 
-  ;; Check if called in a buffer with a file
-  (if (and buffer-file-name (not root-paths))
-      ;; Case 1: Run tests from the current buffer's file
-      (elisp-test--run-buffer buffer-file-name)
-
-    ;; Case 2: Run tests from specified paths
-    (let* ((paths-defined-by-a-method
-            (elisp-test--determine-test-paths root-paths))
-           (test-alist
-            (elisp-test--prepare-test-plan paths-defined-by-a-method))
+  ;; Handle different scenarios
+  (cond
+   ;; In dired mode with marked files
+   ((and (eq major-mode 'dired-mode)
+         (--elisp-test-find-list-marked-paths-dired))
+    (let* ((dired-paths (--elisp-test-find-list-marked-paths-dired))
+           (test-alist (--elisp-test-find-deftest dired-paths))
            (timeout-confirmed
             (elisp-test--confirm-and-get-timeout
              test-alist no-confirm timeout-per-test)))
-
       (when timeout-confirmed
-        ;; Run the tests and get results
         (let* ((execution-data
                 (elisp-test--execute-tests test-alist
                                            timeout-confirmed))
@@ -178,25 +236,43 @@ Results are consolidated into a single report."
                (test-results (plist-get execution-data :results))
                (total-time-spent
                 (plist-get execution-data :total-time)))
-
-          ;; Generate the main consolidated report
           (elisp-test--report-results
            (elisp-test-buffer-create "*elisp-test-results*")
            test-results
            timeout-confirmed
            total-time-spent
-           timestamp)
+           timestamp)))))
 
-          ;; Generate per-directory reports if configured
-          (elisp-test--generate-per-directory-reports
-           test-results timeout-confirmed total-time-spent timestamp)))))
+   ;; In a file buffer
+   ((and buffer-file-name (not root-paths))
+    (elisp-test--run-buffer buffer-file-name))
 
-  ;; Clean up temporary buffers
+   ;; Other cases
+   (t
+    (let* ((paths (elisp-test--determine-test-paths root-paths))
+           (test-alist (and paths (--elisp-test-find-deftest paths)))
+           (timeout-confirmed
+            (elisp-test--confirm-and-get-timeout
+             test-alist no-confirm timeout-per-test)))
+      (when timeout-confirmed
+        (let* ((execution-data
+                (elisp-test--execute-tests test-alist
+                                           timeout-confirmed))
+               (timestamp (plist-get execution-data :timestamp))
+               (test-results (plist-get execution-data :results))
+               (total-time-spent
+                (plist-get execution-data :total-time)))
+          (elisp-test--report-results
+           (elisp-test-buffer-create "*elisp-test-results*")
+           test-results
+           timeout-confirmed
+           total-time-spent
+           timestamp))))))
+
+  ;; Clean up
   (when (elisp-test-buffer "*ert*")
     (kill-buffer "*ert*")))
-
 ;; Helper function to prepare test plan
-
 (defun elisp-test--prepare-test-plan (paths)
   "Create a test plan from PATHS by extracting ert-deftest definitions."
   (when paths

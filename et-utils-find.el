@@ -205,25 +205,42 @@ Only considers files with hidden components after ROOT-PATH."
          tests))
       tests)))
 
-(defun --elisp-test-find-deftest
-    (&optional paths)
+;; (defun --elisp-test-find-deftest
+;;     (&optional paths)
+;;   "Find all ert-deftest forms in provided PATHS.
+;; PATHS can be a single path or a list of paths."
+;;   (let* ((path-list (cond 
+;;                      ((null paths) (list default-directory)) ;; Use current directory if nil
+;;                      ((listp paths) paths)
+;;                      (t (list paths))))
+;;          (tests '()))
+;;     (dolist (path path-list tests)
+;;       (if (file-directory-p path)
+;;           ;; If path is a directory, find test files first
+;;           (let ((test-files (--elisp-test-find-test-files-single path)))
+;;             (dolist (file test-files)
+;;               (setq tests (append tests (--elisp-test-find-deftest-file file)))))
+;;         ;; If path is a file, search directly
+;;         (when (file-exists-p path)
+;;           (setq tests (append tests (--elisp-test-find-deftest-file path))))))))
+(defun --elisp-test-find-deftest (&optional paths)
   "Find all ert-deftest forms in provided PATHS.
 PATHS can be a single path or a list of paths."
   (let* ((path-list (cond 
-                     ((null paths) (list default-directory)) ;; Use current directory if nil
+                     ((null paths) (list default-directory)) 
                      ((listp paths) paths)
                      (t (list paths))))
          (tests '()))
     (dolist (path path-list tests)
-      (if (file-directory-p path)
-          ;; If path is a directory, find test files first
-          (let ((test-files (--elisp-test-find-test-files-single path)))
-            (dolist (file test-files)
-              (setq tests (append tests (--elisp-test-find-deftest-file file)))))
-        ;; If path is a file, search directly
-        (when (file-exists-p path)
-          (setq tests (append tests (--elisp-test-find-deftest-file path))))))))
-
+      (when path  ;; Skip nil paths
+        (if (file-directory-p path)
+            ;; If path is a directory, find test files first
+            (let ((test-files (--elisp-test-find-test-files-single path)))
+              (dolist (file test-files)
+                (setq tests (append tests (--elisp-test-find-deftest-file file)))))
+          ;; If path is a file, process it directly
+          (when (file-exists-p path)
+            (setq tests (append tests (--elisp-test-find-deftest-file path)))))))))
 
 (provide 'et-utils-find)
 

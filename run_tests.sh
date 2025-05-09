@@ -1,6 +1,6 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
-# Timestamp: "2025-05-09 18:21:58 (ywatanabe)"
+# Timestamp: "2025-05-09 19:32:15 (ywatanabe)"
 # File: ./run_tests.sh
 
 THIS_DIR="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
@@ -17,12 +17,16 @@ NC='\033[0m' # No Color
 TEST_TIMEOUT=10
 ELISP_TEST_PATH="$HOME/.emacs.d/lisp/elisp-test"
 TESTS_DIR="${2:-$THIS_DIR/tests}"
+DEBUG_MODE=false
+SINGLE_TEST_FILE=""
 
 usage() {
-    echo "Usage: $0"
+    echo "Usage: $0 [OPTIONS]"
     echo
     echo "Options:"
-    echo "  --tests-dir|-t TESTS_DIR  Directory containing elisp test files (default: $TESTS_DIR)"
+    echo "  -d, --debug               Enable debug output"
+    echo "  -s, --single FILE         Run a single test file"
+    echo "  -t, --tests-dir DIR       Directory containing elisp test files (default: $TESTS_DIR)"
     echo "  --elisp-test PATH         Loadpath to elisp-test.el (default: $ELISP_TEST_PATH)"
     echo "  --timeout SECONDS         Timeout for tests in seconds (default: ${TEST_TIMEOUT}s)"
     echo "  -h, --help                Display this help message"
@@ -30,8 +34,9 @@ usage() {
     echo "Example:"
     echo "  $0 ./tests"
     echo "  $0 --tests-dir /path/to/custom/tests"
-    echo "  $0 ./tests --timeout 30"
-    echo "  $0 ./tests --elisp-test ~/.emacs.d/elisp-test"
+    echo "  $0 --timeout 30"
+    echo "  $0 -s tests/test-et-core-main.el"
+    echo "  $0 -d"
 }
 
 # Parse command line arguments
@@ -46,14 +51,21 @@ while [[ $# -gt 0 ]]; do
             ELISP_TEST_PATH="$2"
             shift 2
             ;;
+        -d|--debug)
+            DEBUG_MODE=true
+            shift
+            ;;
+        -s|--single)
+            SINGLE_TEST_FILE="$2"
+            shift 2
+            ;;
+        -t|--tests-dir)
+            TESTS_DIR_ARG="$2"
+            shift 2
+            ;;
         -h|--help)
             usage
             exit 0
-            ;;
-        -t|--tests-dir)
-            echo -e "${RED}Error: Unknown option $1${NC}" >&2
-            usage
-            exit 1
             ;;
         *)
             TESTS_DIR_ARG="$1"
@@ -62,34 +74,61 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Function to run all tests in a directory
+# Function to run tests
 run_tests_elisp() {
-    local directory="$1"
-
-    if [ -z "$directory" ]; then
-        echo -e "${RED}Error: Test directory not specified${NC}" | tee -a "$LOG_PATH"
+    local target="$1"
+    local is_single_file=false
+    
+    if [ -z "$target" ]; then
+        echo -e "${RED}Error: Test target not specified${NC}" | tee -a "$LOG_PATH"
         usage
         return 1
     fi
 
-    if [ ! -d "$directory" ]; then
-        echo -e "${RED}Error: Directory '$directory' does not exist${NC}" | tee -a "$LOG_PATH"
+    # Check if target is a file or directory
+    if [ -f "$target" ]; then
+        echo "Running single test file: $target..."
+        is_single_file=true
+    elif [ -d "$target" ]; then
+        echo "Running tests in directory: $target..."
+    else
+        echo -e "${RED}Error: Target '$target' does not exist${NC}" | tee -a "$LOG_PATH"
         return 1
     fi
 
-    echo "Running tests in $directory..."
-
-    # Run each test file
-    emacs -Q --batch \
-        --eval "(add-to-list 'load-path \"$(pwd)\")" \
-        --eval "(add-to-list 'load-path \"$THIS_DIR\")" \
-        --eval "(add-to-list 'load-path \"$TESTS_DIR\")" \
-        --eval "(add-to-list 'load-path \"$directory\")" \
-        --eval "(add-to-list 'load-path \"$ELISP_TEST_PATH\")" \
-        --eval "(require 'elisp-test)" \
-        --eval "(elisp-test-run \"$directory\" $TEST_TIMEOUT t)" \
-        >> "$LOG_PATH" 2>&1
-
+    # Prepare command
+    local emacs_cmd="emacs -Q --batch"
+    
+    # Add load paths
+    emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$(pwd)\\\")\" "
+    emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$THIS_DIR\\\")\" "
+    emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$TESTS_DIR\\\")\" "
+    emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$target\\\")\" "
+    emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$ELISP_TEST_PATH\\\")\" "
+    
+    # Load elisp-test
+    emacs_cmd+=" --eval \"(require 'elisp-test)\" "
+    
+    # Set debug level if needed
+    if $DEBUG_MODE; then
+        emacs_cmd+=" --eval \"(setq debug-on-error t)\" "
+        emacs_cmd+=" --eval \"(setq debug-on-signal t)\" "
+    fi
+    
+    # Run tests
+    emacs_cmd+=" --eval \"(elisp-test-run \\\"$target\\\" $TEST_TIMEOUT t)\" "
+    
+    # Execute the command
+    if $DEBUG_MODE; then
+        # Show command if in debug mode
+        echo -e "${YELLOW}Running command: $emacs_cmd${NC}" | tee -a "$LOG_PATH"
+        # Execute with output to terminal in debug mode
+        eval $emacs_cmd | tee -a "$LOG_PATH"
+    else
+        # Execute quietly in normal mode
+        eval $emacs_cmd >> "$LOG_PATH" 2>&1
+    fi
+    
     local exit_status=$?
 
     if [ $exit_status -eq 124 ] || [ $exit_status -eq 137 ]; then
@@ -102,7 +141,14 @@ run_tests_elisp() {
 
     if [ -f "$report_file" ]; then
         echo -e "${GREEN}Report created: $report_file${NC}" | tee -a "$LOG_PATH"
-        cat "$report_file" >> "$LOG_PATH"
+        
+        # Only display report content in debug mode
+        if $DEBUG_MODE; then
+            cat "$report_file" | tee -a "$LOG_PATH"
+        else
+            cat "$report_file" >> "$LOG_PATH"
+        fi
+        
         return 0
     else
         echo -e "${RED}No test report was generated. Check for errors.${NC}" | tee -a "$LOG_PATH"
@@ -110,8 +156,17 @@ run_tests_elisp() {
     fi
 }
 
+# Determine the target to test
+if [ -n "$SINGLE_TEST_FILE" ]; then
+    # Single test file mode
+    TEST_TARGET="$SINGLE_TEST_FILE"
+else
+    # Directory mode
+    TEST_TARGET="${TESTS_DIR_ARG:-$THIS_DIR/tests}"
+fi
+
 # Execute tests and log output
-run_tests_elisp "${TESTS_DIR_ARG:-$THIS_DIR/tests}" | tee -a "$LOG_PATH"
+run_tests_elisp "$TEST_TARGET" | tee -a "$LOG_PATH"
 exit_code=${PIPESTATUS[0]}
 
 if [ $exit_code -eq 0 ]; then
