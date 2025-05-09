@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:28:44>
+;;; Timestamp: <2025-05-09 14:38:53>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -26,6 +26,7 @@
 (require 'et-utils-find)
 (require 'et-utils-parse)
 (require 'et-utils-plan)
+(require 'et-ui-suppress-message)
 
 
 (provide 'elisp-test)
