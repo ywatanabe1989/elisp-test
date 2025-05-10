@@ -3,18 +3,18 @@
 # Timestamp: "2025-05-10 18:46:16 (ywatanabe)"
 # File: ./run_tests_parallel.sh
 
+# Source common test functions
 THIS_DIR="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
-LOG_PATH="$THIS_DIR/.$(basename $0).log"
+source "$THIS_DIR/test_common.sh"
+
+# Clear log file
 echo > "$LOG_PATH"
 
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-# ---------------------------------------
+# Set the number of parallel jobs
+PARALLEL_JOBS=${PARALLEL_JOBS:-$(nproc)}  # Use number of available cores, or env variable if set
 
-# Add near the top of your script with other variables
-PARALLEL_JOBS=$(nproc)  # Use number of available cores
+# Parse command-line arguments
+parse_args "$@"
 
 # Replace the run_tests_elisp function for directory handling to use parallel
 run_tests_elisp() {
@@ -37,13 +37,12 @@ run_tests_elisp() {
         echo "Running tests in directory: $target using $PARALLEL_JOBS cores..."
         # Find all test files
         local test_files=$(find "$target" -name "test-*.el" -type f)
-
-        # Replace this line:
-        echo "$test_files" | parallel -j $PARALLEL_JOBS run_single_test {}
-
-        # With this:
+        
+        # Export functions and variables for parallel execution
         export -f run_single_test
-        export THIS_DIR LOG_PATH DEBUG_MODE TESTS_DIR ELISP_TEST_PATH
+        export THIS_DIR LOG_PATH DEBUG_MODE TESTS_DIR ELISP_TEST_PATH TEST_TIMEOUT
+        
+        # Run tests in parallel
         echo "$test_files" | parallel -j $PARALLEL_JOBS bash -c "run_single_test {}"
 
         # Combine reports or summarize results
