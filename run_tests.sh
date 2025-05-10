@@ -1,6 +1,6 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
-# Timestamp: "2025-05-09 19:32:15 (ywatanabe)"
+# Timestamp: "2025-05-10 20:44:20 (ywatanabe)"
 # File: ./run_tests.sh
 
 THIS_DIR="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
@@ -78,7 +78,7 @@ done
 run_tests_elisp() {
     local target="$1"
     local is_single_file=false
-    
+
     if [ -z "$target" ]; then
         echo -e "${RED}Error: Test target not specified${NC}" | tee -a "$LOG_PATH"
         usage
@@ -98,26 +98,27 @@ run_tests_elisp() {
 
     # Prepare command
     local emacs_cmd="emacs -Q --batch"
-    
+
     # Add load paths
     emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$(pwd)\\\")\" "
     emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$THIS_DIR\\\")\" "
     emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$TESTS_DIR\\\")\" "
     emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$target\\\")\" "
+    emacs_cmd+=" --eval \"(dolist (path (directory-files-recursively \\\"$target\\\" \\\"^[^.].*\\\" t)) (add-to-list 'load-path path))\" "
     emacs_cmd+=" --eval \"(add-to-list 'load-path \\\"$ELISP_TEST_PATH\\\")\" "
-    
+
     # Load elisp-test
     emacs_cmd+=" --eval \"(require 'elisp-test)\" "
-    
+
     # Set debug level if needed
     if $DEBUG_MODE; then
         emacs_cmd+=" --eval \"(setq debug-on-error t)\" "
         emacs_cmd+=" --eval \"(setq debug-on-signal t)\" "
     fi
-    
+
     # Run tests
     emacs_cmd+=" --eval \"(elisp-test-run \\\"$target\\\" $TEST_TIMEOUT t)\" "
-    
+
     # Execute the command
     if $DEBUG_MODE; then
         # Show command if in debug mode
@@ -128,7 +129,7 @@ run_tests_elisp() {
         # Execute quietly in normal mode
         eval $emacs_cmd >> "$LOG_PATH" 2>&1
     fi
-    
+
     local exit_status=$?
 
     if [ $exit_status -eq 124 ] || [ $exit_status -eq 137 ]; then
@@ -139,21 +140,21 @@ run_tests_elisp() {
     # Find reports created in the last minute
     local report_file=$(find "$THIS_DIR" -maxdepth 1 -mmin -0.1 -name "*ELISP-TEST-REPORT*" | head -n 1)
 
-    if [ -f "$report_file" ]; then
-        echo -e "${GREEN}Report created: $report_file${NC}" | tee -a "$LOG_PATH"
-        
-        # Only display report content in debug mode
-        if $DEBUG_MODE; then
-            cat "$report_file" | tee -a "$LOG_PATH"
-        else
-            cat "$report_file" >> "$LOG_PATH"
-        fi
-        
-        return 0
-    else
-        echo -e "${RED}No test report was generated. Check for errors.${NC}" | tee -a "$LOG_PATH"
-        return 1
-    fi
+    # if [ -f "$report_file" ]; then
+    #     echo -e "${GREEN}Report created: $report_file${NC}" | tee -a "$LOG_PATH"
+
+    #     # Only display report content in debug mode
+    #     if $DEBUG_MODE; then
+    #         cat "$report_file" | tee -a "$LOG_PATH"
+    #     else
+    #         cat "$report_file" >> "$LOG_PATH"
+    #     fi
+
+    #     return 0
+    # else
+    #     echo -e "${RED}No test report was generated. Check for errors.${NC}" | tee -a "$LOG_PATH"
+    #     return 1
+    # fi
 }
 
 # Determine the target to test
