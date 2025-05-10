@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8; lexical-binding: t -*-
 ;;; Author: ywatanabe
-;;; Timestamp: <2025-05-09 14:38:53>
+;;; Timestamp: <2025-05-10 21:53:19>
 ;;; File: /home/ywatanabe/.emacs.d/lisp/elisp-test/elisp-test.el
 
 ;;; Copyright (C) 2025 Yusuke Watanabe (ywatanabe@alumni.u-tokyo.ac.jp)
@@ -16,7 +16,8 @@
 (eval-and-compile
   (defvar elisp-test-buffer-name)
   (defvar elisp-test-timeout-sec)
-  (defvar elisp-test-run-file-expressions))
+  (defvar elisp-test-run-file-expressions)
+  (defvar elisp-test-results-org-path ""))
 
 ;; UI components
 (require 'et-ui-buffer)

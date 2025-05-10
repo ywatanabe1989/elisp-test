@@ -1,0 +1,1 @@
+/home/ywatanabe/.emacs.d/lisp/elisp-test/.ELISP-TEST-REPORT-20250511-003136-16-PASSED-16-TOTAL-100-PERCENT.org

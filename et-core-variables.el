@@ -20,35 +20,16 @@
 
 (defvar elisp-test-report-base-name
   "ELISP-TEST-REPORT"
-  "WRITE HERE")
+  "Base name for test report files.")
 
-;; (defcustom elisp-test-results-org-path
-;;   (expand-file-name "ELISP-TEST.org" user-emacs-directory)
-;;   "Path to save test results in org format."
-;;   :type 'string
-;;   :group 'elisp-test)
 
-;; ;; Then define the path for dired, which depends on the base path
-
-;; (defcustom elisp-test-results-org-path-dired
-;;   (file-name-nondirectory elisp-test-results-org-path)
-;;   "Filename for test results when running from dired."
-;;   :type 'string
-;;   :group 'elisp-test)
-
-(defcustom elisp-test-results-org-path
-  nil
-  "Path to save test results in org format."
-  :type 'string
-  :group 'elisp-test)
+(defvar elisp-test-results-org-path ""
+  "Path to save test results in org format.")
 
 ;; Then define the path for dired, which depends on the base path
 
-(defcustom elisp-test-results-org-path-dired
-  nil
-  "Filename for test results when running from dired."
-  :type 'string
-  :group 'elisp-test)
+(defvar elisp-test-results-org-path-dired ""
+  "Filename for test results when running from dired.")
 
 (defvar elisp-test-results-org-path-final
   nil
@@ -68,41 +49,23 @@
   '("^test-.*\\.el$")
   "List of regular expressions to match test files.")
 
-(defcustom elisp-test-run-file-exclude-expressions
+(defvar elisp-test-run-file-exclude-expressions
   '("/\\.[^/]*/"        ; Hidden directories
     "/\\.[^/]*$"        ; Hidden files
     "/_[^/]*/"          ; Underscore directories
-    "/_[^/]*$")
-                                        ; Underscore files
-  "List of regular expressions to exclude test files."
-  :type
-  '(repeat string)
-  :group 'elisp-test)
+    "/_[^/]*$")         ; Underscore files
+  "List of regular expressions to exclude test files.")
 
-;; (defcustom elisp-test-results-org-path
-;;   nil
-;;   "File path where test results will be saved."
-;;   :type 'file
-;;   :group 'elisp-test)
-
-;; (defcustom elisp-test-results-org-path-dired
-;;   (file-name-nondirectory elisp-test-results-org-path)
-;;   "Filename for test results when running from dired."
-;;   :type 'string
-;;   :group 'elisp-test)
-;; First define the base path
 
 (defvar elisp-test-plan-buffer-name
   "*ELISP-TEST-PLAN*"
   "Buffer name for test planning")
 
-(defcustom elisp-test-generate-per-directory-reports
+(defvar elisp-test-generate-per-directory-reports
   nil
   "When non-nil, generate separate test reports for each directory.
 In addition to the consolidated report, each directory will get its own
-report with only the tests from that directory."
-  :type 'boolean
-  :group 'elisp-test)
+report with only the tests from that directory.")
 
 
 (provide 'et-core-variables)
