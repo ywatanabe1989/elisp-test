@@ -12,7 +12,7 @@
 
 (defun elisp-test--prepare-test-plan (paths)
   "Create test execution plan from PATHS and return list of tests."
-  (let* ((tests (mapcan #'--elisp-test-find-deftest paths))
+  (let* ((tests (mapcan #'elisp-test--find-deftest (list paths)))
          (test-names (mapcar #'cdr tests))
          (duplicate-names
           (seq-filter

@@ -200,7 +200,7 @@ Only considers files with hidden components after ROOT-PATH."
     (let
         (tests)
       (while
-          (re-search-forward "^(ert-deftest\\s-+\\([^[:space:]\n]+\\)"
+          (re-search-forward "(ert-deftest\\s-+\\([^[:space:]\n]+\\)"
                              nil t)
         (push
          (cons file
