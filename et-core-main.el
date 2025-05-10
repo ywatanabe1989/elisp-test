@@ -16,8 +16,10 @@
 ;; Functions to run tests from a buffer
 
 (defun elisp-test--run-buffer (file-path)
-  "Run tests from FILE-PATH buffer."
-  (let* ((tests (--elisp-test-find-deftest-file file-path))
+  "Run tests from FILE-PATH buffer.
+Extract test definitions from the file and execute them with appropriate timeout.
+Results are displayed in a dedicated buffer."
+  (let* ((tests (elisp-test--find-deftest-file file-path))
          (timestamp (format-time-string "%Y%m%d-%H%M%S"))
          (timeout-per-test-confirmed elisp-test-timeout-sec)
          (start-time (current-time))
@@ -38,11 +40,15 @@
 ;; Helper function to determine which paths to test based on context
 
 (defun elisp-test--determine-test-paths (root-paths)
-  "Determine which paths to test based on context and ROOT-PATHS."
+  "Determine which paths to test based on context and ROOT-PATHS.
+If called from dired with marked files, use those files.
+If ROOT-PATHS is provided, use those paths.
+Otherwise, use the current directory.
+Returns a list of file paths to be tested."
   (cond
    ;; Case 1: Called from dired with marked files
    ((eq major-mode 'dired-mode)
-    (--elisp-test-find-list-marked-paths-dired))
+    (elisp-test--find-list-marked-paths-dired))
 
    ;; Case 2: Called with explicit root paths
    (root-paths
@@ -146,11 +152,11 @@ Uses TIMEOUT, TOTAL-TIME and TIMESTAMP for report generation."
   (cond
    ;; In dired mode with marked files
    ((and (eq major-mode 'dired-mode)
-         (--elisp-test-find-list-marked-paths-dired))
-    (let* ((dired-paths (--elisp-test-find-list-marked-paths-dired)))
+         (elisp-test--find-list-marked-paths-dired))
+    (let* ((dired-paths (elisp-test--find-list-marked-paths-dired)))
       ;; Add package paths
       (elisp-test--add-package-load-paths dired-paths)
-      (let* ((test-alist (--elisp-test-find-deftest dired-paths))
+      (let* ((test-alist (elisp-test--find-deftest dired-paths))
              (timeout-confirmed
               (elisp-test--confirm-and-get-timeout
                test-alist no-confirm timeout-per-test)))
@@ -179,7 +185,7 @@ Uses TIMEOUT, TOTAL-TIME and TIMESTAMP for report generation."
       ;; Add package paths
       (elisp-test--add-package-load-paths paths)
       (let*
-          ((test-alist (and paths (--elisp-test-find-deftest paths)))
+          ((test-alist (and paths (elisp-test--find-deftest paths)))
            (timeout-confirmed
             (elisp-test--confirm-and-get-timeout
              test-alist no-confirm timeout-per-test)))
@@ -208,7 +214,7 @@ Uses TIMEOUT, TOTAL-TIME and TIMESTAMP for report generation."
   (when paths
     ;; (message "Preparing test plan from %d files/directories"
     ;;          (length paths))
-    (--elisp-test-find-deftest paths)))
+    (elisp-test--find-deftest paths)))
 
 ;;; elisp-test-core-main.el ends here
 

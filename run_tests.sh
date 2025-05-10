@@ -3,76 +3,15 @@
 # Timestamp: "2025-05-10 20:44:20 (ywatanabe)"
 # File: ./run_tests.sh
 
+# Source common test functions
 THIS_DIR="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
-LOG_PATH="$THIS_DIR/.$(basename $0).log"
+source "$THIS_DIR/test_common.sh"
+
+# Clear log file
 echo > "$LOG_PATH"
 
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-# ---------------------------------------
-
-# Script to run elisp tests
-TEST_TIMEOUT=10
-ELISP_TEST_PATH="$HOME/.emacs.d/lisp/elisp-test"
-TESTS_DIR="${2:-$THIS_DIR/tests}"
-DEBUG_MODE=false
-SINGLE_TEST_FILE=""
-
-usage() {
-    echo "Usage: $0 [OPTIONS]"
-    echo
-    echo "Options:"
-    echo "  -d, --debug               Enable debug output"
-    echo "  -s, --single FILE         Run a single test file"
-    echo "  -t, --tests-dir DIR       Directory containing elisp test files (default: $TESTS_DIR)"
-    echo "  --elisp-test PATH         Loadpath to elisp-test.el (default: $ELISP_TEST_PATH)"
-    echo "  --timeout SECONDS         Timeout for tests in seconds (default: ${TEST_TIMEOUT}s)"
-    echo "  -h, --help                Display this help message"
-    echo
-    echo "Example:"
-    echo "  $0 ./tests"
-    echo "  $0 --tests-dir /path/to/custom/tests"
-    echo "  $0 --timeout 30"
-    echo "  $0 -s tests/test-et-core-main.el"
-    echo "  $0 -d"
-}
-
-# Parse command line arguments
-TESTS_DIR_ARG=""
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --timeout)
-            TEST_TIMEOUT="$2"
-            shift 2
-            ;;
-        --elisp-test)
-            ELISP_TEST_PATH="$2"
-            shift 2
-            ;;
-        -d|--debug)
-            DEBUG_MODE=true
-            shift
-            ;;
-        -s|--single)
-            SINGLE_TEST_FILE="$2"
-            shift 2
-            ;;
-        -t|--tests-dir)
-            TESTS_DIR_ARG="$2"
-            shift 2
-            ;;
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        *)
-            TESTS_DIR_ARG="$1"
-            shift
-            ;;
-    esac
-done
+# Parse command-line arguments
+parse_args "$@"
 
 # Function to run tests
 run_tests_elisp() {

@@ -20,21 +20,8 @@
 
 (defvar elisp-test-report-base-name
   "ELISP-TEST-REPORT"
-  "WRITE HERE")
+  "Base name for test report files.")
 
-;; (defcustom elisp-test-results-org-path
-;;   (expand-file-name "ELISP-TEST.org" user-emacs-directory)
-;;   "Path to save test results in org format."
-;;   :type 'string
-;;   :group 'elisp-test)
-
-;; ;; Then define the path for dired, which depends on the base path
-
-;; (defcustom elisp-test-results-org-path-dired
-;;   (file-name-nondirectory elisp-test-results-org-path)
-;;   "Filename for test results when running from dired."
-;;   :type 'string
-;;   :group 'elisp-test)
 
 (defcustom elisp-test-results-org-path
   nil
@@ -79,18 +66,6 @@
   '(repeat string)
   :group 'elisp-test)
 
-;; (defcustom elisp-test-results-org-path
-;;   nil
-;;   "File path where test results will be saved."
-;;   :type 'file
-;;   :group 'elisp-test)
-
-;; (defcustom elisp-test-results-org-path-dired
-;;   (file-name-nondirectory elisp-test-results-org-path)
-;;   "Filename for test results when running from dired."
-;;   :type 'string
-;;   :group 'elisp-test)
-;; First define the base path
 
 (defvar elisp-test-plan-buffer-name
   "*ELISP-TEST-PLAN*"
